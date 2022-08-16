@@ -1,2 +1,1 @@
-# Drummer
-Drummer Official Discord Music Bot
+# Drummer-Music-Bot

@@ -34,9 +34,9 @@ module.exports = {
       if (queue) {
         return;
       } else {
-        if (message.guild.me.voice.channel) {
+        if (message.guild.members.me.voice.channel) {
           const connection = getVoiceConnection(clientVc.guild.id);
-          connection.disconnect();
+          connection.destroy();
         }
       }
     }, interval);

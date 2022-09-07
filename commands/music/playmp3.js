@@ -20,8 +20,7 @@ module.exports = {
    */
   execute(client, message, args) {
     const channel = message.member.voice.channel;
-
-    const query = args[0];
+    var query = args[0];
 
     if (!query) return error("Insert a link to a discord video or song");
     const connection = joinVoiceChannel({
@@ -30,8 +29,15 @@ module.exports = {
       adapterCreator: channel.guild.voiceAdapterCreator,
     });
 
+    var resource;
     const player = createAudioPlayer();
-    const resource = createAudioResource(query, { inlineVolume: true });
+    if (query == 3) {
+      resource = createAudioResource("./music/3.mp3", {
+        inlineVolume: true,
+      });
+    } else {
+      resource = createAudioResource(query, { inlineVolume: true });
+    }
     resource.volume.setVolumeLogarithmic(100 / 100);
     player.play(resource);
     connection.subscribe(player);

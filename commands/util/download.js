@@ -2,13 +2,13 @@ const { EmbedBuilder, Client, Message } = require("discord.js");
 const searcher = require("youtube-sr").default;
 const ytdl = require("ytdl-core");
 const fs = require("fs");
+//folder name " downloads "
 
 module.exports = {
   name: "download",
   aliases: ["dl", "dw"],
   d: "Private cmd",
   staff: true,
-  stop: true,
   /**
    *
    * @param {Client} client
@@ -16,8 +16,8 @@ module.exports = {
    * @param {String[]} args
    * @returns
    */
-  async execute(client, message, args) {
-    const queue = message.client.queue.get(message.guild.id);
+  async execute(client, message, args, q) {
+    const queue = q.get(message.guild.id);
 
     console.log(`${message.author.tag} used the command download!`);
 
@@ -31,13 +31,13 @@ module.exports = {
     let title = data.videoDetails.title;
     let url = data.videoDetails.video_url;
 
-    if (fs.existsSync(`./download/${title}.m4a`)) {
+    if (fs.existsSync(`./downloads/${title}.m4a`)) {
       message.channel.send({
         content: `The file already exist, i will sent it now`,
       });
       message.channel
         .send({
-          files: [`./download/${title}.m4a`],
+          files: [`./downloads/${title}.m4a`],
         })
         .catch((error) => {
           if (error.code == 40005) {
@@ -58,12 +58,12 @@ module.exports = {
     });
 
     const writer = receiver.pipe(
-      fs.createWriteStream(`./download/${title}.m4a`)
+      fs.createWriteStream(`./downloads/${title}.m4a`)
     );
 
     writer.on("finish", () => {
       maxFileSize = 8 * 1024 * 1024;
-      var stats = fs.statSync(`./download/${title}.m4a`);
+      var stats = fs.statSync(`./downloads/${title}.m4a`);
       const fileSize = stats.size;
       if (fileSize >= maxFileSize) {
         message.channel.send({
@@ -75,12 +75,14 @@ module.exports = {
         .send({
           content: `I will send you the song shortly!\nThe song is: ${url}`,
         })
-        .catch((err) => {});
+        .catch((err) => {
+          console.error(err);
+        });
 
       var title2 = title;
       message.channel
         .send({
-          files: [`./download/${title2}.m4a`],
+          files: [`./downloads/${title2}.m4a`],
           content: `${title}`,
         })
         .catch((error) => {
@@ -96,8 +98,9 @@ module.exports = {
         });
     });
 
-    writer.on("error", () => {
-      message.channel.send({
+    writer.on("error", (error) => {
+      console.error(error);
+      return message.channel.send({
         content: `There was an error trying to download the song!\nThe song may have special characters!`,
       });
     });

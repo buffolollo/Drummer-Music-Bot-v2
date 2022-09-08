@@ -4,7 +4,7 @@ const Song = require("./Song");
 
 async function addSongs(ytdata, message, playlist = false) {
   let queue = message.client.queue.get(message.guild.id);
-  const song = await Song(ytdata, message);
+  const song = Song(ytdata, message);
 
   queue.songs.push(song);
   if (playlist) return;

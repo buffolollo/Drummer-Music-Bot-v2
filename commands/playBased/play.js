@@ -75,17 +75,18 @@ module.exports = {
       });
     }
 
-    setInterval(() => {
-      if (message.guild.members.me.voice.channel)
-        message.guild.members.me.voice.setDeaf(true).catch((err) => {});
-    }, 2000);
+    message.channel.send({
+      content: `🔎 **Searching** \`${query}\``,
+    });
+
+    message.guild.members.me.voice.setDeaf(true).catch((err) => {});
 
     let vc = message.member.voice.channel;
 
     if (searcher.validate(query, "PLAYLIST_ID")) {
+      const playlist = await searcher.getPlaylist(query);
       var a = 0;
       var interrupt = 0;
-      const playlist = await searcher.getPlaylist(query);
       message.channel.send({
         content: `🔍🎶 **I'm adding the playlist** \`${playlist.title}. Songs: ${playlist.videos.length}\` One moment...`,
       });
@@ -113,9 +114,6 @@ module.exports = {
 
     if (searcher.validate(query, "VIDEO")) {
       let songInfo = await yt.getInfo(query);
-      message.channel.send({
-        content: `🔎 **Searching** \`${songInfo.videoDetails.title}\``,
-      });
       if (!songInfo)
         return error(
           message,
@@ -126,9 +124,6 @@ module.exports = {
 
     if (query.match(spotifySongRegex)) {
       const data = await spotify.getPreview(query);
-      message.channel.send({
-        content: `🔎 **Searching** \`${data.title} ${data.artist}\``,
-      });
       const result = await searcher.search(`${data.title} ${data.artist}`, {
         type: "video",
         limit: 1,
@@ -177,9 +172,6 @@ module.exports = {
     }
 
     {
-      message.channel.send({
-        content: `🔎 **Searching** \`${args.join(" ")}\``,
-      });
       const result = await searcher.search(query, { type: "video", limit: 1 });
       if (result.length < 1 || !result)
         return error(message, "**I have not found any video!**");
@@ -191,9 +183,9 @@ module.exports = {
 
     async function videoHandler(ytdata, message, vc, playlist = false) {
       let queue = message.client.queue.get(message.guild.id);
-      const song = await Song(ytdata, message);
+      const song = Song(ytdata, message);
       if (!queue) {
-        let structure = await Queue(message, channel, setqueue, song);
+        let structure = Queue(message, channel, setqueue, song);
         try {
           if (
             !message.guild.members.me.voice.channel ||

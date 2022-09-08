@@ -1,4 +1,9 @@
-const { EmbedBuilder, Client, Message } = require("discord.js");
+const {
+  EmbedBuilder,
+  Client,
+  Message,
+  AttachmentBuilder,
+} = require("discord.js");
 const searcher = require("youtube-sr").default;
 const ytdl = require("ytdl-core");
 const fs = require("fs");

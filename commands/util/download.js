@@ -7,11 +7,12 @@ const {
 const searcher = require("youtube-sr").default;
 const ytdl = require("ytdl-core");
 const fs = require("fs");
+const send = require("../../utils/src/send");
 //folder name " downloads "
 let working;
 
 module.exports = {
-  name: "dltest",
+  name: "dl",
   d: "Private cmd",
   staff: true,
   /**
@@ -42,6 +43,7 @@ module.exports = {
     });
 
     working = true;
+    send(message, `Downloading song...`);
     const stream = rec.pipe(fs.createWriteStream("./downloads/song.m4a"));
 
     stream.on("finish", () => {

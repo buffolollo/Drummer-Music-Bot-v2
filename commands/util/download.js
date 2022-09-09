@@ -71,8 +71,9 @@ module.exports = {
             return error(message, `**ERROR**: The file is to heavy!`);
           }
           console.log(`errore: ${error}`, error.code);
-          return message.channel.send({
+          return msg.edit({
             content: `There was an error trying to send the song: ${error}`,
+            embeds: [],
           });
         });
       return (working = false);

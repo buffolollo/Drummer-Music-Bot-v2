@@ -210,7 +210,6 @@ module.exports = {
           }
           let queue = message.client.queue.get(message.guild.id);
           playFunc.execute(message);
-          // _playYTDLStream(structure.songs[0]);
         } catch (e) {
           console.log(e);
           deletequeue(message.guild.id);

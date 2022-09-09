@@ -1,4 +1,5 @@
 const { Client, Message } = require("discord.js");
+const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
 let ytdl = require("discord-ytdl-core");
 let yt = require("ytdl-core");
 const fetch = require("isomorphic-unfetch");

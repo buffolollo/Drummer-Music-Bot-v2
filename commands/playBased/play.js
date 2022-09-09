@@ -208,7 +208,6 @@ module.exports = {
             getVoiceConnection(message.guild.id).destroy();
             return deletequeue(message.guild.id);
           }
-          let queue = message.client.queue.get(message.guild.id);
           playFunc.execute(message);
         } catch (e) {
           console.log(e);

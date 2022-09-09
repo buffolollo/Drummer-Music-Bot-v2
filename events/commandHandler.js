@@ -1,4 +1,10 @@
-const { Message, Client, EmbedBuilder, ChannelType } = require("discord.js");
+const {
+  Message,
+  Client,
+  EmbedBuilder,
+  ChannelType,
+  PermissionFlagsBits,
+} = require("discord.js");
 const db = require("../database/schemas/prefixSchema");
 const BlockUser = require("../database/schemas/BlockUser");
 let blocked;
@@ -58,6 +64,29 @@ module.exports = {
       return;
     }
 
+    if (cmd.id && message.member.id != "690637465341526077") {
+      return message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription("**You don't have permissions!** :x:")
+            .setColor("Red"),
+        ],
+      });
+    }
+
+    if (
+      cmd.staff &&
+      !message.member.permissions.has(PermissionFlagsBits.Administrator)
+    ) {
+      return message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription("**You don't have permissions!** :x:")
+            .setColor("Red"),
+        ],
+      });
+    }
+
     if (cmd.voice) {
       if (!message.member.voice.channel) {
         return message.channel.send({
@@ -92,16 +121,6 @@ module.exports = {
         embeds: [
           new EmbedBuilder()
             .setDescription("**There is no queue** :x:")
-            .setColor("Red"),
-        ],
-      });
-    }
-
-    if (cmd.staff && message.member.id != "690637465341526077") {
-      return message.channel.send({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription("**You don't have permissions!** :x:")
             .setColor("Red"),
         ],
       });

@@ -6,7 +6,7 @@ module.exports = {
   name: "reload",
   aliases: ["rl"],
   d: "Private cmd!",
-  staff: true,
+  id: true,
   /**
    *
    * @param {Client} client

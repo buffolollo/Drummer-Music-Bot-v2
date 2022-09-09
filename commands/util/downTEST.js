@@ -8,6 +8,7 @@ const searcher = require("youtube-sr").default;
 const ytdl = require("ytdl-core");
 const fs = require("fs");
 //folder name " downloads "
+let working;
 
 module.exports = {
   name: "dltest",
@@ -21,7 +22,8 @@ module.exports = {
    * @returns
    */
   async execute(client, message, args, q) {
-    const queue = q.get(message.guild.id);
+    if (working == true)
+      return error(message, "**Wait a moment... and try again!**");
 
     console.log(`${message.author.tag} used the command download!`);
 
@@ -35,59 +37,32 @@ module.exports = {
     let title = data.videoDetails.title;
     let url = data.videoDetails.video_url;
 
-    if (fs.existsSync(`./downloads/${title}.m4a`)) {
-      message.channel.send({
-        content: `The file already exist, i will sent it now`,
+    const rec = ytdl(url, {
+      quality: "highestaudio",
+    });
+
+    working = true;
+    const stream = rec.pipe(fs.createWriteStream("./downloads/song.m4a"));
+
+    stream.on("finish", () => {
+      const attachment = new AttachmentBuilder("./downloads/song.m4a", {
+        name: `${title}.m4a`,
       });
       message.channel
         .send({
-          files: [`./downloads/${title}.m4a`],
+          content: `Ecco la canzone: \`${title}\``,
+          files: [attachment],
         })
         .catch((error) => {
           if (error.code == 40005) {
-            return message.channel.send({
-              content: `**ERROR**: The file is to heavy!`,
-            });
+            return error(message, `**ERROR**: The file is to heavy!`);
           }
-          console.log(`errore: ${error.code}`);
+          console.log(`errore: ${error}`, error.code);
           return message.channel.send({
             content: `There was an error trying to send the song: ${error}`,
           });
         });
-      return;
-    }
-
-    const receiver = ytdl(url, {
-      quality: "highestaudio",
+      return (working = false);
     });
-
-    const attachment = new AttachmentBuilder(
-      receiver.pipe(fs.createWriteStream("song.m4a")),
-      {
-        name: `${title}.m4a`,
-      }
-    );
-
-    message.channel.send({
-      content: `La canzone`,
-      files: [attachment],
-    });
-
-    //   const writer = receiver.pipe(
-    //     fs.createWriteStream(`./downloads/${title}.m4a`)
-    //   );
-
-    //.pipe(fs.createWriteStream(`./music/${music}.m4a`))
-    /*const seconds = "10"
-      const time = seconds * 1000
-      var musci2 = music
-      message.author.send(`La canzone ti arriverà tra ${seconds} secondi!\nla canzone in questione è: ${track.url}`)
-      setTimeout(function () {
-          message.author.send({
-              files: [`./music/${musci2}.m4a`]
-          }).catch((error) => {
-              message.channel.send(`C'è stato un errore provando a inviare la canzone: ${error}`)
-          })
-      }, time)*/
   },
 };

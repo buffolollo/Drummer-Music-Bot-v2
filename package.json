@@ -1,6 +1,6 @@
 {
   "name": "drummer-official-bot",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "DJS_version": "14",
   "description": "Drummer Official Music Bot",
   "main": "index.js",

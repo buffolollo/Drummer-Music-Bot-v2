@@ -105,7 +105,7 @@ module.exports = {
     if (goto) {
       queue.songs[0] = queue.songs[goto];
       let q = queue.songs;
-      q.splice(num, 1);
+      q.splice(goto, 1);
     }
 
     queue.message.channel.send({

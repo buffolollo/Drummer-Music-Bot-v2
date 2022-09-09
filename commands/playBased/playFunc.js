@@ -78,7 +78,7 @@ module.exports = {
       return deletequeue(message.guild.id);
     }
 
-    const track = queue.songs[0];
+    const track = queue.songs[goto || 0];
 
     player.on(AudioPlayerStatus.Idle, () => {
       queue.addTime = 0;

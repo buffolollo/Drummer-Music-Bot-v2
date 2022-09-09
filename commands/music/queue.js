@@ -90,7 +90,7 @@ function embedGeneraor(queue) {
     const msg = new EmbedBuilder()
       .setAuthor({
         name: "Queue",
-        url: "https://img.icons8.com/color/2x/rhombus-loader.gif",
+        iconURL: "https://img.icons8.com/color/2x/rhombus-loader.gif",
       })
       .setThumbnail(thumbnail)
       .setColor(0x006400)

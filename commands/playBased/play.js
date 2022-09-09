@@ -1,13 +1,4 @@
-const { EmbedBuilder, Client, Message, Util } = require("discord.js");
-const {
-  AudioPlayerStatus,
-  joinVoiceChannel,
-  createAudioPlayer,
-  NoSubscriberBehavior,
-  createAudioResource,
-  VoiceConnectionStatus,
-  getVoiceConnection,
-} = require("@discordjs/voice");
+const { Client, Message } = require("discord.js");
 let ytdl = require("discord-ytdl-core");
 let yt = require("ytdl-core");
 const fetch = require("isomorphic-unfetch");

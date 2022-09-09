@@ -1,8 +1,6 @@
 const {
   AudioPlayerStatus,
   Message,
-  Client,
-  joinVoiceChannel,
   createAudioPlayer,
   createAudioResource,
   getVoiceConnection,
@@ -13,8 +11,6 @@ module.exports = {
   /**
    *
    * @param {Message} message
-   * @param {Client} client
-   * @param {null} track
    * @returns
    */
   async execute(message, filters, seek, goto) {

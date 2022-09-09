@@ -112,8 +112,6 @@ module.exports = {
       content: `**Playing** 🎶 \`${track.name}\` - Now!`,
     });
 
-    return;
-
     function rest() {
       try {
         let data = message.client.queue.get(message.guild.id);

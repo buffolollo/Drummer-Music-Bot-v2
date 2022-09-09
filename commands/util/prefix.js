@@ -13,14 +13,10 @@ module.exports = {
    * @param {String[]} args
    */
   async execute(client, message, args, queue, prefix) {
-    const send = (content) =>
-      message.channel.send({
-        embeds: [new EmbedBuilder().setDescription(content).setColor("GREEN")],
-      });
     const newPrefix = args[0];
 
     if (!newPrefix) {
-      return send(`**Your personal prefix is: \`${prefix}\`**`);
+      return send(message, `**Your personal prefix is: \`${prefix}\`**`);
     }
 
     const data = await db.findOne({ _id: message.author.id });
@@ -32,14 +28,13 @@ module.exports = {
           prefix: `${newPrefix}`,
         },
       });
-      send(`**Your prefix has been updated to ${newPrefix} !**`);
+      send(message, `**Your prefix has been updated to ${newPrefix}**`);
     } else {
       db.create({
         _id: message.author.id,
         prefix: newPrefix,
       });
-      send(`**Your prefix has been updated to ${newPrefix} !**`);
+      send(message, `**Your prefix has been updated to ${newPrefix}**`);
     }
-
   },
 };

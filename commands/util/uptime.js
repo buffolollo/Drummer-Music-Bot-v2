@@ -12,10 +12,11 @@ module.exports = {
    * @param {String[]} args
    */
   execute(client, message, args) {
-    const uptime = prettyMilliseconds(client.uptime);
+    // const uptime = prettyMilliseconds(client.uptime);
+    const uptime = `<t:${parseInt(`${client.readyTimestamp / 1000}`)}:R>`;
     const uptimeEmbed = new EmbedBuilder()
       .setTitle(`Client Uptime`)
-      .setDescription(`**Uptime**: \`${uptime}\``)
+      .setDescription(`**Uptime**: ${uptime}`)
       .setColor("DarkGreen")
       .setTimestamp();
     message.reply({

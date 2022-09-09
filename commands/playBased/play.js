@@ -22,6 +22,7 @@ const pause = require("../music/pause");
 const addSongToQueue = require("../../utils/src/addSongToQueue");
 const Queue = require("../../utils/src/Queue");
 const Song = require("../../utils/src/Song");
+const playFunc = require("./playFunc");
 
 module.exports = {
   name: "play",
@@ -207,7 +208,9 @@ module.exports = {
             getVoiceConnection(message.guild.id).destroy();
             return deletequeue(message.guild.id);
           }
-          _playYTDLStream(structure.songs[0]);
+          let queue = message.client.queue.get(message.guild.id);
+          playFunc.execute(message);
+          // _playYTDLStream(structure.songs[0]);
         } catch (e) {
           console.log(e);
           deletequeue(message.guild.id);

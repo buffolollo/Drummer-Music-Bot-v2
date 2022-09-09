@@ -10,6 +10,7 @@ const {
   VoiceConnectionStatus,
   getVoiceConnection,
 } = require("@discordjs/voice");
+const playFunc = require("./playFunc");
 
 module.exports = {
   name: "goto",
@@ -44,7 +45,8 @@ module.exports = {
 
     if (!queue.songs[num]) {
       var num = parseInt(queue.songs.length - 1);
-      return _playYTDLStream(queue.songs[num]);
+      return playFunc(message, null, null, num)
+      // return _playYTDLStream(queue.songs[num]);
     }
 
     return _playYTDLStream(queue.songs[num]);

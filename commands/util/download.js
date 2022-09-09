@@ -35,7 +35,13 @@ module.exports = {
       return error(message, "This is not a youtube link!");
 
     working = true;
-    send(message, `Downloading song...`);
+    const msg = await message.channel.send({
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(`Downloading song...`)
+          .setColor("Yellow"),
+      ],
+    });
 
     let data = await ytdl.getBasicInfo(query);
     let title = data.videoDetails.title;
@@ -51,9 +57,13 @@ module.exports = {
       const attachment = new AttachmentBuilder("./downloads/song.m4a", {
         name: `${title}.m4a`,
       });
-      message.channel
-        .send({
-          content: `Ecco la canzone: \`${title}\``,
+      msg
+        .edit({
+          embeds: [
+            new EmbedBuilder()
+              .setColor("DarkGreen")
+              .setDescription(`Ecco la canzone: \`${title}\``),
+          ],
           files: [attachment],
         })
         .catch((error) => {

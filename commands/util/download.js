@@ -34,6 +34,9 @@ module.exports = {
     if (!searcher.validate(query, "VIDEO"))
       return error(message, "This is not a youtube link!");
 
+    working = true;
+    send(message, `Downloading song...`);
+
     let data = await ytdl.getBasicInfo(query);
     let title = data.videoDetails.title;
     let url = data.videoDetails.video_url;
@@ -42,8 +45,6 @@ module.exports = {
       quality: "highestaudio",
     });
 
-    working = true;
-    send(message, `Downloading song...`);
     const stream = rec.pipe(fs.createWriteStream("./downloads/song.m4a"));
 
     stream.on("finish", () => {

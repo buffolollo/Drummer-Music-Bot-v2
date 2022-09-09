@@ -20,46 +20,40 @@ module.exports = {
   async execute(message, filters, seek, goto) {
     let queue = message.client.queue.get(message.guild.id);
     let deletequeue = (id) => message.client.queue.delete(id);
+
     let newStream;
-    if (!queue) {
-      newStream = await ytdl(queue.songs[0].url, {
-        filter: "audioonly",
-        quality: "highestaudio",
-        highWaterMark: 1 << 25,
-        opusEncoded: true,
-      });
-    } else {
-      if (!queue.songs[0]) {
-        try {
-          deletequeue(message.guild.id);
-          error(
-            queue.message,
-            "**The queue is empty, there are no more songs to play!**"
-          );
-          var interval = config.leaveOnEndQueue * 1000;
-          setTimeout(() => {
-            let queue = message.client.queue.get(message.guild.id);
-            if (queue) return;
-            if (message.guild.members.me.voice.channel) {
-              const connection = getVoiceConnection(
-                message.guild.members.me.voice.channel.guild.id
-              );
-              connection.destroy();
-            }
-          }, interval);
-        } catch (error) {
-          return deletequeue(message.guild.id);
-        }
-        return;
+
+    if (!queue.songs[0]) {
+      try {
+        deletequeue(message.guild.id);
+        error(
+          queue.message,
+          "**The queue is empty, there are no more songs to play!**"
+        );
+        var interval = config.leaveOnEndQueue * 1000;
+        setTimeout(() => {
+          let queue = message.client.queue.get(message.guild.id);
+          if (queue) return;
+          if (message.guild.members.me.voice.channel) {
+            const connection = getVoiceConnection(
+              message.guild.members.me.voice.channel.guild.id
+            );
+            connection.destroy();
+          }
+        }, interval);
+      } catch (error) {
+        return deletequeue(message.guild.id);
       }
-      newStream = await ytdl(queue.songs[goto || 0].url, {
-        filter: "audioonly",
-        quality: "highestaudio",
-        highWaterMark: 1 << 25,
-        opusEncoded: true,
-        seek: seek || 0,
-      });
+      return;
     }
+
+    newStream = await ytdl(queue.songs[goto || 0].url, {
+      filter: "audioonly",
+      quality: "highestaudio",
+      highWaterMark: 1 << 25,
+      opusEncoded: true,
+      seek: seek || 0,
+    });
 
     if (queue.stream) await queue.stream.destroy();
     queue.stream = newStream;

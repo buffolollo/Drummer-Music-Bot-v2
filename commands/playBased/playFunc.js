@@ -13,7 +13,7 @@ module.exports = {
    * @param {Message} message
    * @returns
    */
-  async execute(message, filters, seek, goto) {
+  async execute(message, filter, seek, goto) {
     let queue = message.client.queue.get(message.guild.id);
     let deletequeue = (id) => message.client.queue.delete(id);
 
@@ -43,13 +43,25 @@ module.exports = {
       return;
     }
 
-    newStream = await ytdl(queue.songs[goto || 0].url, {
-      filter: "audioonly",
-      quality: "highestaudio",
-      highWaterMark: 1 << 25,
-      opusEncoded: true,
-      seek: seek || 0,
-    });
+    if (!filter) {
+      newStream = await ytdl(queue.songs[goto || 0].url, {
+        filter: "audioonly",
+        quality: "highestaudio",
+        highWaterMark: 1 << 25,
+        opusEncoded: true,
+        seek: seek || 0,
+      });
+    } else {
+      console.log(filter);
+      newStream = await ytdl(queue.songs[goto || 0].url, {
+        filter: "audioonly",
+        quality: "highestaudio",
+        highWaterMark: 1 << 25,
+        opusEncoded: true,
+        encoderArgs: filter.code || [],
+        seek: filter.time,
+      });
+    }
 
     if (queue.stream) await queue.stream.destroy();
     queue.stream = newStream;
@@ -63,6 +75,7 @@ module.exports = {
     resource.volume.setVolumeLogarithmic(queue.volume / 100);
     queue.player = player;
     queue.resource = resource;
+    if (filter) queue.filter = filter.name;
     player.play(resource);
     queue.connection.subscribe(player);
 
@@ -91,6 +104,10 @@ module.exports = {
 
     if (seek)
       return send(queue.message, `**I brought the song to ${seek} seconds!**`);
+
+    if (filter) {
+      return send(queue.message, `Filter ${filter.name} set to ${filter.p}`);
+    }
 
     if (goto) {
       queue.songs[0] = queue.songs[goto];

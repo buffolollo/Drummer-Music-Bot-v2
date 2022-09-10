@@ -47,7 +47,7 @@ module.exports = {
         newStream = await ytdl(queue.songs[goto || 0].url, {
           filter: "audioonly",
           quality: "highestaudio",
-          highWaterMark: 1 << 25,
+          // highWaterMark: 1 << 25,
           opusEncoded: true,
           seek: seek || 0,
         });
@@ -55,7 +55,7 @@ module.exports = {
         newStream = await ytdl(queue.songs[goto || 0].url, {
           filter: "audioonly",
           quality: "highestaudio",
-          highWaterMark: 1 << 25,
+          // highWaterMark: 1 << 25,
           opusEncoded: true,
           encoderArgs: filter.code || [],
           seek: filter.time,

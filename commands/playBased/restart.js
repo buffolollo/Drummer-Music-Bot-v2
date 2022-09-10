@@ -10,6 +10,7 @@ const {
 } = require("@discordjs/voice");
 const ytdl = require("discord-ytdl-core");
 const yt = require("ytdl-core");
+const playFunc = require("./playFunc");
 
 module.exports = {
   name: "replay",
@@ -30,7 +31,7 @@ module.exports = {
     const setqueue = (id, obj) => message.client.queue.set(id, obj);
     const deletequeue = (id) => message.client.queue.delete(id);
 
-    _playYTDLStream(queue.songs[0]);
+    return playFunc.execute(message, null, null, 0);
 
     async function _playYTDLStream(track) {
       try {

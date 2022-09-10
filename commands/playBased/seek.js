@@ -50,7 +50,6 @@ module.exports = {
     time = parseInt(time);
 
     try {
-      let song = queue.songs[0];
       playFunc.execute(message, null, time);
     } catch (error) {
       deletequeue(message.guild.id);

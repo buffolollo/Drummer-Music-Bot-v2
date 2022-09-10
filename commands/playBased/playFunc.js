@@ -14,110 +14,119 @@ module.exports = {
    * @returns
    */
   async execute(message, filter, seek, goto) {
-    let queue = message.client.queue.get(message.guild.id);
-    let deletequeue = (id) => message.client.queue.delete(id);
+    try {
+      let queue = message.client.queue.get(message.guild.id);
+      let deletequeue = (id) => message.client.queue.delete(id);
 
-    let newStream;
+      if (!queue.songs[0] || !queue) {
+        try {
+          deletequeue(message.guild.id);
+          error(
+            queue.message,
+            "**The queue is empty, there are no more songs to play!**"
+          );
+          var interval = config.leaveOnEndQueue * 1000;
+          setTimeout(() => {
+            let queue = message.client.queue.get(message.guild.id);
+            if (queue) return;
+            if (message.guild.members.me.voice.channel) {
+              const connection = getVoiceConnection(
+                message.guild.members.me.voice.channel.guild.id
+              );
+              connection.destroy();
+            }
+          }, interval);
+        } catch (error) {
+          return deletequeue(message.guild.id);
+        }
+        return;
+      }
 
-    if (!queue.songs[0]) {
-      try {
-        deletequeue(message.guild.id);
-        error(
-          queue.message,
-          "**The queue is empty, there are no more songs to play!**"
-        );
-        var interval = config.leaveOnEndQueue * 1000;
-        setTimeout(() => {
-          let queue = message.client.queue.get(message.guild.id);
-          if (queue) return;
-          if (message.guild.members.me.voice.channel) {
-            const connection = getVoiceConnection(
-              message.guild.members.me.voice.channel.guild.id
-            );
-            connection.destroy();
-          }
-        }, interval);
-      } catch (error) {
+      let newStream;
+      if (!filter) {
+        newStream = await ytdl(queue.songs[goto || 0].url, {
+          filter: "audioonly",
+          quality: "highestaudio",
+          highWaterMark: 1 << 25,
+          opusEncoded: true,
+          seek: seek || 0,
+        });
+      } else {
+        newStream = await ytdl(queue.songs[goto || 0].url, {
+          filter: "audioonly",
+          quality: "highestaudio",
+          highWaterMark: 1 << 25,
+          opusEncoded: true,
+          encoderArgs: filter.code || [],
+          seek: filter.time,
+        });
+      }
+
+      if (queue.stream) await queue.stream.destroy();
+      queue.stream = newStream;
+
+      if (seek) {
+        queue.addTime = parseInt(seek);
+      }
+
+      const player = createAudioPlayer();
+      const resource = createAudioResource(newStream, { inlineVolume: true });
+      resource.volume.setVolumeLogarithmic(queue.volume / 100);
+      queue.player = player;
+      queue.resource = resource;
+      if (filter) queue.filter = filter;
+      player.play(resource);
+      queue.connection.subscribe(player);
+
+      if (
+        !message.guild.members.me.voice.channel ||
+        !message.client.queue.get(message.guild.id)
+      ) {
+        queue.connection.destroy();
         return deletequeue(message.guild.id);
       }
-      return;
-    }
 
-    if (!filter) {
-      newStream = await ytdl(queue.songs[goto || 0].url, {
-        filter: "audioonly",
-        quality: "highestaudio",
-        highWaterMark: 1 << 25,
-        opusEncoded: true,
-        seek: seek || 0,
+      const track = queue.songs[goto || 0];
+
+      player.on(AudioPlayerStatus.Idle, () => {
+        queue.addTime = 0;
+        if (queue.loopone) {
+          return this.execute(message);
+        } else if (queue.loopall) {
+          let removed = queue.songs.shift();
+          queue.songs.push(removed);
+        } else {
+          queue.songs.shift();
+        }
+        this.execute(message);
       });
-    } else {
-      console.log(filter);
-      newStream = await ytdl(queue.songs[goto || 0].url, {
-        filter: "audioonly",
-        quality: "highestaudio",
-        highWaterMark: 1 << 25,
-        opusEncoded: true,
-        encoderArgs: filter.code || [],
-        seek: filter.time,
-      });
-    }
 
-    if (queue.stream) await queue.stream.destroy();
-    queue.stream = newStream;
+      if (seek)
+        return send(
+          queue.message,
+          `**I brought the song to ${seek} seconds!**`
+        );
 
-    if (seek) {
-      queue.addTime = parseInt(seek);
-    }
-
-    const player = createAudioPlayer();
-    const resource = createAudioResource(newStream, { inlineVolume: true });
-    resource.volume.setVolumeLogarithmic(queue.volume / 100);
-    queue.player = player;
-    queue.resource = resource;
-    if (filter) queue.filter = filter.name;
-    player.play(resource);
-    queue.connection.subscribe(player);
-
-    if (
-      !message.guild.members.me.voice.channel ||
-      !message.client.queue.get(message.guild.id)
-    ) {
-      queue.connection.destroy();
-      return deletequeue(message.guild.id);
-    }
-
-    const track = queue.songs[goto || 0];
-
-    player.on(AudioPlayerStatus.Idle, () => {
-      queue.addTime = 0;
-      if (queue.loopone) {
-        return this.execute(message);
-      } else if (queue.loopall) {
-        let removed = queue.songs.shift();
-        queue.songs.push(removed);
-      } else {
-        queue.songs.shift();
+      if (filter) {
+        return send(queue.message, `Filter ${filter.name} set to ${filter.p}`);
       }
-      this.execute(message);
-    });
 
-    if (seek)
-      return send(queue.message, `**I brought the song to ${seek} seconds!**`);
+      if (goto) {
+        queue.songs[0] = queue.songs[goto];
+        let q = queue.songs;
+        q.splice(goto, 1);
+      }
 
-    if (filter) {
-      return send(queue.message, `Filter ${filter.name} set to ${filter.p}`);
+      queue.message.channel.send({
+        content: `**Playing** 🎶 \`${track.name}\` - Now!`,
+      });
+    } catch (e) {
+      console.error(e);
+      return error(
+        message,
+        `there was an error trying to reproduce this video`
+      );
     }
-
-    if (goto) {
-      queue.songs[0] = queue.songs[goto];
-      let q = queue.songs;
-      q.splice(goto, 1);
-    }
-
-    queue.message.channel.send({
-      content: `**Playing** 🎶 \`${track.name}\` - Now!`,
-    });
 
     function rest() {
       try {

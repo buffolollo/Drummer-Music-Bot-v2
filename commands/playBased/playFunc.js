@@ -55,7 +55,7 @@ module.exports = {
         quality: "highestaudio",
         highWaterMark: 1 << 25,
         opusEncoded: true,
-        encoderArgs: filter.code || [],
+        encoderArgs: code || [],
         seek: seek || 0,
       });
 

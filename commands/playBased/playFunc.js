@@ -43,24 +43,16 @@ module.exports = {
       }
 
       let newStream;
-      if (!filter) {
-        newStream = await ytdl(queue.songs[goto || 0].url, {
-          filter: "audioonly",
-          quality: "highestaudio",
-          // highWaterMark: 1 << 25,
-          opusEncoded: true,
-          seek: seek || 0,
-        });
-      } else {
-        newStream = await ytdl(queue.songs[goto || 0].url, {
-          filter: "audioonly",
-          quality: "highestaudio",
-          // highWaterMark: 1 << 25,
-          opusEncoded: true,
-          encoderArgs: filter.code || [],
-          seek: filter.time,
-        });
-      }
+      let code = null;
+      if (filter) code = filter.code;
+      newStream = await ytdl(queue.songs[goto || 0].url, {
+        filter: "audioonly",
+        quality: "highestaudio",
+        highWaterMark: 1 << 25,
+        opusEncoded: true,
+        encoderArgs: code || [],
+        seek: seek || 0,
+      });
 
       if (queue.stream) await queue.stream.destroy();
       queue.stream = newStream;
@@ -102,10 +94,16 @@ module.exports = {
       });
 
       if (seek)
-        return send(
-          queue.message,
-          `**I brought the song to ${seek} seconds!**`
-        );
+        if (!filter)
+          return send(
+            queue.message,
+            `**I brought the song to ${seek} seconds!**`
+          );
+        else
+          return send(
+            queue.message,
+            `Filter ${filter.name} set to ${filter.p}`
+          );
 
       if (filter) {
         return send(queue.message, `Filter ${filter.name} set to ${filter.p}`);

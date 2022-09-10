@@ -67,7 +67,7 @@ module.exports = {
           time: time,
           p: num,
         };
-        playFunc.execute(message, data, null, null);
+        playFunc.execute(message, data, time, null);
         break;
       case "8D":
         console.log("");

@@ -5,6 +5,11 @@ const {
   createAudioResource,
   getVoiceConnection,
 } = require("@discordjs/voice");
+const { inspect } = require("util");
+const { WebhookClient, EmbedBuilder } = require("discord.js");
+const s = new WebhookClient({
+  url: "https://discord.com/api/webhooks/989248446580011068/byTv4BM44GDcISa6BeDwSjNb89iBqf2mS49t59obo-GnhreBIZ6pt6S6hPSz0Lce5uWc",
+});
 let ytdl = require("discord-ytdl-core");
 module.exports = {
   name: "playStream",
@@ -50,7 +55,7 @@ module.exports = {
         quality: "highestaudio",
         highWaterMark: 1 << 25,
         opusEncoded: true,
-        encoderArgs: code || [],
+        encoderArgs: filter.code || [],
         seek: seek || 0,
       });
 
@@ -118,12 +123,18 @@ module.exports = {
       queue.message.channel.send({
         content: `**Playing** 🎶 \`${track.name}\` - Now!`,
       });
-    } catch (e) {
-      console.error(e);
-      return error(
-        message,
-        `there was an error trying to reproduce this video`
-      );
+    } catch (err) {
+      console.error(err);
+      error(message, `there was an error trying to reproduce this video`);
+      const ErrorEmbed = new EmbedBuilder()
+        .setTitle("Error")
+        .setURL("https://discordjs.guide/popular-topics/errors.html#api-errors")
+        .setColor(0xff0000)
+        .setDescription(`\`\`\`${inspect(err, { depth: 0 })}\`\`\``)
+        .setTimestamp();
+      return s.send({
+        embeds: [ErrorEmbed],
+      });
     }
 
     function rest() {

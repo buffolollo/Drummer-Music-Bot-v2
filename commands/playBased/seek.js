@@ -25,8 +25,6 @@ module.exports = {
    * @returns
    */
   execute(client, message, args) {
-    const channel = message.member.voice.channel;
-
     const queue = message.client.queue.get(message.guild.id);
 
     const deletequeue = (id) => message.client.queue.delete(id);

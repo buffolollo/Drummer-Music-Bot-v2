@@ -12,13 +12,13 @@ module.exports = {
     if (oldstate.member.id != "928001727309946932") return;
     const deletequeue = (id) => oldstate.client.queue.delete(id);
     if (oldstate.channelId && !newstate.channel) {
-      const queue = oldstate.client.queue.get(newstate.guild.id);
+      const queue = oldstate.client.queue.get(oldstate.guild.id);
       if (queue) {
         queue.message.channel.send({
           embeds: [
             new EmbedBuilder()
               .setDescription(
-                "The bot was disconnected manually, Stopping the music!"
+                `**${client.user.username} was disconnected manually, stopping the music!**`
               )
               .setColor("DarkGreen"),
           ],

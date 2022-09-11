@@ -23,7 +23,7 @@ module.exports = {
       const queue = message.client.queue.get(message.guild.id);
       let deletequeue = (id) => message.client.queue.delete(id);
 
-      if (!queue.songs[0] || !queue) {
+      if (!queue || !queue.songs[0]) {
         try {
           deletequeue(message.guild.id);
           error(
@@ -50,7 +50,7 @@ module.exports = {
       let newStream;
       let code = null;
       if (filter) code = filter.code;
-      newStream = await ytdl(queue.songs[goto || 0].url, {
+      newStream = ytdl(queue.songs[goto || 0].url, {
         filter: "audioonly",
         quality: "highestaudio",
         highWaterMark: 1 << 25,
@@ -69,11 +69,11 @@ module.exports = {
       const player = createAudioPlayer();
       const resource = createAudioResource(newStream, { inlineVolume: true });
       resource.volume.setVolumeLogarithmic(queue.volume / 100);
+      player.play(resource);
+      queue.connection.subscribe(player);
       queue.player = player;
       queue.resource = resource;
       if (filter) queue.filter = filter;
-      player.play(resource);
-      queue.connection.subscribe(player);
 
       if (
         !message.guild.members.me.voice.channel ||

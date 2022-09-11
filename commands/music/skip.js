@@ -2,7 +2,6 @@ const { EmbedBuilder, Client, Message } = require("discord.js");
 const send = require("../../utils/src/send");
 
 module.exports = {
-  //^<>&
   name: "skip",
   aliases: [],
   voice: true,

@@ -18,7 +18,7 @@ module.exports = {
           embeds: [
             new EmbedBuilder()
               .setDescription(
-                "The bot was disconnect manually, Stopping the music!"
+                "The bot was disconnected manually, Stopping the music!"
               )
               .setColor("DarkGreen"),
           ],

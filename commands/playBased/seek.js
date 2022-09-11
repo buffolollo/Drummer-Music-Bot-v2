@@ -13,7 +13,7 @@ const forHumans = require("../../utils/src/forhumans");
 const playFunc = require("./playFunc");
 module.exports = {
   name: "seek",
-  aliases: [],
+  aliases: ["sk"],
   voice: true,
   queue: true,
   d: "Seek the song!",

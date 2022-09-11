@@ -20,7 +20,7 @@ module.exports = {
    */
   async execute(message, filter, seek, goto) {
     try {
-      let queue = message.client.queue.get(message.guild.id);
+      const queue = message.client.queue.get(message.guild.id);
       let deletequeue = (id) => message.client.queue.delete(id);
 
       if (!queue.songs[0] || !queue) {

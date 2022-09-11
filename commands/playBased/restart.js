@@ -17,6 +17,7 @@ module.exports = {
   aliases: ["restart", "rs"],
   voice: true,
   queue: true,
+  d: "Restart the song!",
   /**
    *
    * @param {Client} client

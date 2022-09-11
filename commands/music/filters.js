@@ -49,11 +49,9 @@ module.exports = {
    */
   execute(client, message, args, q) {
     const queue = q.get(message.guild.id);
-    const query = args[0].toString();
+    const query = args[0].toString().toLowerCase();
     const filters = ["8D", "bassboost", "8d"];
     if (!filters.includes(query)) return console.log("nop");
-    const num = args[1];
-    if (!num) return error(message, "Select a number!");
     let currentStreamTime = parseInt(
       queue.player.state.playbackDuration / 1000
     );
@@ -61,16 +59,26 @@ module.exports = {
     let time = currentStreamTime + addtime;
     switch (query) {
       case "bassboost":
-        const data = {
-          name: "bassboost",
-          code: ["-af", `bass=g=${num}`],
-          time: time,
-          p: num,
-        };
-        playFunc.execute(message, data, time, null);
+        {
+          const num = args[1];
+          if (!num) return error(message, "Select a number!");
+          const data = {
+            name: "bassboost",
+            code: ["-af", `bass=g=${num}`],
+            p: num,
+          };
+          playFunc.execute(message, data, time, null);
+        }
         break;
       case "8D":
-        console.log("");
+        {
+          const data = {
+            name: "8D",
+            code: ["-af", `apulsator=hz=0.09`],
+            p: "default",
+          };
+          playFunc.execute(message, data, time, null);
+        }
         break;
       default:
         break;

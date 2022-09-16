@@ -11,7 +11,7 @@ module.exports = {
   execute(oldstate, newstate, client) {
     if (oldstate.member.id != client.user.id) return;
     if (newstate.serverDeaf == false) {
-      newstate.setDeaf(true);
+      newstate.setDeaf(true).catch((err) => {});
     }
   },
 };

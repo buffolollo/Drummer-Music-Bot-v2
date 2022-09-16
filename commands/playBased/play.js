@@ -89,7 +89,7 @@ module.exports = {
           break;
         }
         await videoHandler(
-          await yt.getInfo(playlist.videos[i].id),
+          await yt.getInfo(playlist.videos[i].url),
           message,
           vc,
           true

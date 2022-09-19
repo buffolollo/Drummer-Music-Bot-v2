@@ -1,6 +1,5 @@
 const { Client, Message } = require("discord.js");
 const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
-let ytdl = require("discord-ytdl-core");
 let yt = require("ytdl-core");
 const fetch = require("isomorphic-unfetch");
 const spotify = require("spotify-url-info")(fetch);
@@ -128,7 +127,6 @@ module.exports = {
     }
 
     if (query.match(spotifyPlaylistRegex)) {
-      const playlist = await spotify.getTracks(query);
       const data = await spotify.getData(query);
       message.channel.send({
         content: `🔍🎶 **I'm adding the playlist** \`${data.name}\` It may take a while...`,
@@ -136,12 +134,16 @@ module.exports = {
       var ForLoop = 0;
       var noResult = 0;
       var interrupt = 0;
-      for (let i = 0; i < playlist.length; i++) {
+      for (let i = 0; i < data.tracks.items.length; i++) {
         if (!message.guild.members.me.voice.channel) {
           interrupt = 1;
           break;
         }
-        const query = `${playlist[i].name} ${playlist[i].artists[0].name}`;
+        const query = `${data.tracks.items[i].track.name} ${data.tracks.items[
+          i
+        ].track.artists
+          .map((a) => a.name)
+          .join(" ")}`;
         const result = await searcher
           .search(query, { type: "video", limit: 1 })
           .catch((err) => {});

@@ -32,7 +32,6 @@ module.exports = {
     send(message, `**Song removed: \`${queue.songs[num].name}\`!**`);
 
     let q = queue.songs;
-    let index = num;
-    q.splice(index, 1);
+    q.splice(num, 1);
   },
 };

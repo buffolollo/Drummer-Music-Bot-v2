@@ -44,8 +44,8 @@ module.exports = {
     }
 
     if (!queue.songs[num]) {
-      var numm = parseInt(queue.songs.length - 1);
-      return playFunc(message, null, null, numm);
+      send(message, "Skipping to the last song in the queue");
+      num = parseInt(queue.songs.length - 1);
     }
 
     return playFunc.execute(message, null, null, num);

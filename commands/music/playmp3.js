@@ -32,10 +32,14 @@ module.exports = {
     var resource;
     const player = createAudioPlayer();
     if (query == 1) {
-      resource = createAudioResource("./music/3.mp3", {
+      resource = createAudioResource("./music/pati.mp3", {
         inlineVolume: true,
       });
     } else if (query == 2) {
+      resource = createAudioResource("./music/3.mp3", {
+        inlineVolume: true,
+      });
+    } else if (query == 3) {
       resource = createAudioResource("./music/all.flac", {
         inlineVolume: true,
       });

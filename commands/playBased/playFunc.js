@@ -59,7 +59,11 @@ module.exports = {
         seek: seek || 0,
       });
 
-      if (queue.stream) await queue.stream.destroy();
+      try {
+        if (queue.stream) await queue.stream.destroy();
+      } catch (error) {
+        return;
+      }
       queue.stream = newStream;
 
       if (seek) {

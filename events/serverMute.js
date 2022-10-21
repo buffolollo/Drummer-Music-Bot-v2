@@ -9,9 +9,10 @@ module.exports = {
    * @param {Client} client
    */
   execute(oldstate, newstate, client) {
-    if (oldstate.member.id != client.user.id) return;
-    if (newstate.serverDeaf == false) {
-      newstate.setDeaf(true).catch((err) => {});
+    if (oldstate.member.id == client.user.id) {
+      if (newstate.serverDeaf == false) {
+        newstate.setDeaf(true).catch((err) => {});
+      }
     }
   },
 };

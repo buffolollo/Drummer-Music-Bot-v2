@@ -72,9 +72,9 @@ module.exports = {
 
       const player = createAudioPlayer();
       const resource = createAudioResource(newStream, { inlineVolume: true });
-      resource.volume.setVolumeLogarithmic(queue.volume / 100);
       player.play(resource);
       queue.connection.subscribe(player);
+      resource.volume.setVolumeLogarithmic(queue.volume / 100);
       queue.player = player;
       queue.resource = resource;
       if (filter) queue.filter = filter;

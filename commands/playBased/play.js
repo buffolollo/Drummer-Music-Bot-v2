@@ -87,7 +87,7 @@ module.exports = {
           interrupt = 1;
           break;
         }
-        await videoHandler(
+        videoHandler(
           await yt.getInfo(playlist.videos[i].url),
           message,
           vc,
@@ -111,7 +111,7 @@ module.exports = {
           message,
           "**I couldn't find any songs with the provided URL**"
         );
-      return await videoHandler(songInfo, message, vc);
+      return videoHandler(songInfo, message, vc);
     }
 
     if (query.match(spotifySongRegex)) {
@@ -123,7 +123,7 @@ module.exports = {
       if (result.length < 1 || !result)
         return error(message, "**I have not found any video!**");
       const songInfo = await yt.getInfo(result[0].url);
-      return await videoHandler(songInfo, message, vc);
+      return videoHandler(songInfo, message, vc);
     }
 
     if (query.match(spotifyPlaylistRegex)) {
@@ -151,7 +151,7 @@ module.exports = {
           noResult++; // could be used later for skipped tracks due to result not being found //tipo per quanti errori
           continue;
         }
-        await videoHandler(await yt.getInfo(result[0].url), message, vc, true);
+        videoHandler(await yt.getInfo(result[0].url), message, vc, true);
         ForLoop++;
       }
 
@@ -171,7 +171,7 @@ module.exports = {
       if (result.length < 1 || !result)
         return error(message, "**I have not found any video!**");
       const songInfo = await yt.getInfo(result[0].url);
-      return await videoHandler(songInfo, message, vc);
+      return videoHandler(songInfo, message, vc);
     }
 
     //VIDEOHANDLER FOR SONGS

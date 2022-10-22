@@ -26,8 +26,8 @@ module.exports = {
    * @returns
    */
   execute(client, message, args, q) {
-    const setqueue = (id, obj) => message.client.queue.set(id, obj);
-    const deletequeue = (id) => message.client.queue.delete(id);
+    const setqueue = (id, obj) => queues.set(id, obj);
+    const deletequeue = (id) => queues.delete(id);
 
     const queue = q.get(message.guild.id);
 

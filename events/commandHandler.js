@@ -6,8 +6,7 @@ const {
   PermissionFlagsBits,
 } = require("discord.js");
 const db = require("../database/schemas/prefixSchema");
-const BlockUser = require("../database/schemas/BlockUser");
-let blocked;
+// const BlockUser = require("../database/schemas/BlockUser");
 
 module.exports = {
   name: "messageCreate",
@@ -34,20 +33,20 @@ module.exports = {
 
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-    const blockuser = await BlockUser.findOne({
-      _id: message.author.id,
-    });
-    if (blockuser) blocked = blockuser.blocked;
-    if (!blockuser) {
-      blocked == false;
-      BlockUser.create({
-        _id: message.author.id,
-        blocked: false,
-      });
-    }
-    if (blocked == true) {
-      return error(message, `**You are blocked from the commands!**`);
-    }
+    // const blockuser = await BlockUser.findOne({
+    //   _id: message.author.id,
+    // });
+    // if (blockuser) blocked = blockuser.blocked;
+    // if (!blockuser) {
+    //   blocked == false;
+    //   BlockUser.create({
+    //     _id: message.author.id,
+    //     blocked: false,
+    //   });
+    // }
+    // if (blocked == true) {
+    //   return error(message, `**You are blocked from the commands!**`);
+    // }
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
@@ -101,7 +100,7 @@ module.exports = {
         if (
           message.member.voice.channelId !=
             message.guild.members.me.voice.channelId &&
-          message.client.queue.get(message.guild.id)
+          queues.get(message.guild.id)
         ) {
           return message.channel.send({
             embeds: [
@@ -116,7 +115,7 @@ module.exports = {
       }
     }
 
-    if (cmd.queue && !message.client.queue.get(message.guild.id)) {
+    if (cmd.queue && !queues.get(message.guild.id)) {
       return message.channel.send({
         embeds: [
           new EmbedBuilder()
@@ -126,7 +125,7 @@ module.exports = {
       });
     }
 
-    let queue = message.client.queue;
+    let queue = queues;
 
     try {
       cmd.execute(client, message, args, queue, prefix);

@@ -14,7 +14,7 @@ module.exports = {
    * @param {String[]} args
    */
   async execute(client, message, args) {
-    let queue = message.client.queue.get(message.guild.id);
+    let queue = queues.get(message.guild.id);
 
     let pages = [];
     let current = 0;

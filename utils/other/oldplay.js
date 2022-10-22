@@ -26,9 +26,9 @@ module.exports = {
         new EmbedBuilder().setColor("RED").setDescription(err)
       );
     const send = (content) => message.channel.send(content);
-    const setqueue = (id, obj) => message.client.queue.set(id, obj);
-    const deletequeue = (id) => message.client.queue.delete(id);
-    var queue = message.client.queue.get(message.guild.id);
+    const setqueue = (id, obj) => queues.set(id, obj);
+    const deletequeue = (id) => queues.delete(id);
+    var queue = queues.get(message.guild.id);
     var song;
     let newStream;
 
@@ -79,7 +79,7 @@ module.exports = {
     }
 
     async function videoHandler(ytdata, message, vc, playlist = false) {
-      let queue = message.client.queue.get(message.guild.id);
+      let queue = queues.get(message.guild.id);
       song = {
         name: Util.escapeMarkdown(ytdata.videoDetails.title),
         thumbnail:
@@ -199,7 +199,7 @@ module.exports = {
         message.member.guild.me.voice.setDeaf(true).catch((err) => {});
     }, 2000);
 
-    var list = message.client.queue.get(message.guild.id);
+    var list = queues.get(message.guild.id);
 
     if (list) {
       send(
@@ -251,7 +251,7 @@ module.exports = {
 
     async function _playYTDLStream(track) {
       try {
-        const data = message.client.queue.get(message.guild.id);
+        const data = queues.get(message.guild.id);
         if (!track) {
           try {
             data.channel.send(
@@ -264,7 +264,7 @@ module.exports = {
             deletequeue(message.guild.id);
             var interval = config.leaveOnEndQueue * 1000;
             setTimeout(() => {
-              let queue = message.client.queue.get(message.guild.id);
+              let queue = queues.get(message.guild.id);
               if (queue) {
                 return;
               } else {

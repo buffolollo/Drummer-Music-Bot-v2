@@ -16,7 +16,7 @@ module.exports = {
   execute(client, message, args) {
     const clientVc = message.guild.members.me.voice.channel;
 
-    let queue = message.client.queue.get(message.guild.id);
+    let queue = queues.get(message.guild.id);
 
     if (!message.guild.members.me.voice.channel) {
       return send(message, "I am already logged out!");
@@ -24,7 +24,7 @@ module.exports = {
 
     if (queue) {
       queue.player.stop();
-      message.client.queue.delete(message.guild.id);
+      queues.delete(message.guild.id);
     }
     const connection = getVoiceConnection(clientVc.guild.id);
     connection.disconnect();

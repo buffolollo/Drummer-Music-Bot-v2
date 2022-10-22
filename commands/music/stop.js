@@ -20,17 +20,17 @@ module.exports = {
     const channel = message.member.voice.channel;
     const clientVc = message.guild.members.me.voice.channel;
 
-    let queue = message.client.queue.get(message.guild.id);
+    let queue = queues.get(message.guild.id);
 
     queue.player.stop();
-    message.client.queue.delete(message.guild.id);
+    queues.delete(message.guild.id);
 
     send(message, "**Music stopped :white_check_mark: **");
 
     var interval = config.leaveOnStop * 1000;
 
     setTimeout(() => {
-      let queue = message.client.queue.get(message.guild.id);
+      let queue = queues.get(message.guild.id);
       if (queue) {
         return;
       } else {

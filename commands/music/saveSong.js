@@ -13,7 +13,7 @@ module.exports = {
    * @param {String[]} args
    */
   execute(client, message, args) {
-    let queue = message.client.queue.get(message.guild.id);
+    let queue = queues.get(message.guild.id);
 
     const channel = message.member.voice.channel;
 

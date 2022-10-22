@@ -14,7 +14,7 @@ module.exports = {
    * @param {String[]} args 
    */
   async execute(client, message, args) {
-    let queue = message.client.queue.get(message.guild.id);
+    let queue = queues.get(message.guild.id);
     const channel = message.member.voice.channel;
     const error = (err) =>
       message.channel.send(
@@ -24,7 +24,7 @@ module.exports = {
       message.channel.send(
         new EmbedBuilder().setDescription(content).setColor("GREEN")
       );
-    const setqueue = (id, obj) => message.client.queue.set(id, obj);
-    const deletequeue = (id) => message.client.queue.delete(id);
+    const setqueue = (id, obj) => queues.set(id, obj);
+    const deletequeue = (id) => queues.delete(id);
   },
 };

@@ -15,7 +15,7 @@ module.exports = {
    * @returns
    */
   execute(client, message, args) {
-    let queue = message.client.queue.get(message.guild.id);
+    let queue = queues.get(message.guild.id);
 
     const query = args[0];
     if (!query) return send(message, `The volume is **${queue.volume}**`);

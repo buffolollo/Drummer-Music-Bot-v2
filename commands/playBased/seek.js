@@ -25,9 +25,9 @@ module.exports = {
    * @returns
    */
   execute(client, message, args) {
-    const queue = message.client.queue.get(message.guild.id);
+    const queue = queues.get(message.guild.id);
 
-    const deletequeue = (id) => message.client.queue.delete(id);
+    const deletequeue = (id) => queues.delete(id);
     var time;
 
     time = args[0];
@@ -39,7 +39,7 @@ module.exports = {
         "To keep the song going, you have to pick it up again"
       );
 
-    let queue2 = message.client.queue.get(message.guild.id);
+    let queue2 = queues.get(message.guild.id);
     let or = time * 1000;
     if (queue2.songs[0].durationMS <= or) {
       return queue.player.stop();

@@ -15,7 +15,7 @@ module.exports = {
    * @returns
    */
   execute(client, message, args, q) {
-    let queue = message.client.queue.get(message.guild.id);
+    let queue = queues.get(message.guild.id);
     send(message, "**Song skipped :white_check_mark: **");
     return queue.player.stop();
   },

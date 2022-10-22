@@ -14,10 +14,10 @@ module.exports = {
   async execute(client, message, args) {
     const channel = message.member.voice.channel;
 
-    let queue = message.client.queue.get(message.guild.id);
+    let queue = queues.get(message.guild.id);
 
-    const setqueue = (id, obj) => message.client.queue.set(id, obj);
-    const deletequeue = (id) => message.client.queue.delete(id);
+    const setqueue = (id, obj) => queues.set(id, obj);
+    const deletequeue = (id) => queues.delete(id);
 
     const connection = await joinVoiceChannel({
       channelId: channel.id,

@@ -12,7 +12,7 @@ module.exports = {
     if (oldstate.member.id != client.user.id) return;
     const deletequeue = (id) => oldstate.client.queue.delete(id);
     if (oldstate.channelId && !newstate.channel) {
-      const queue = oldstate.client.queue.get(oldstate.guild.id);
+      const queue = queues.get(oldstate.guild.id);
       if (queue) {
         queue.message.channel.send({
           embeds: [

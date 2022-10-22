@@ -14,7 +14,7 @@ module.exports = {
    * @returns
    */
   execute(client, message, args) {
-    let queue = message.client.queue.get(message.guild.id);
+    let queue = queues.get(message.guild.id);
     queue.songs = [];
     return send(message, "**Queue cleared :white_check_mark: **");
   },

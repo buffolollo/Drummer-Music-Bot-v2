@@ -16,7 +16,7 @@ module.exports = {
   execute(client, message, args) {
     const channel = message.member.voice.channel;
 
-    let queue = message.client.queue.get(message.guild.id);
+    let queue = queues.get(message.guild.id);
 
     if (queue.songs.length < 2)
       return error(message, "There's only the song I'm playing!");

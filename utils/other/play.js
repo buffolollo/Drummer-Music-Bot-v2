@@ -2,9 +2,9 @@ const ytdl = require("discord-ytdl-core");
 const { EmbedBuilder } = require("discord.js")
 
 async function play(track, message) {
-  const deletequeue = (id) => message.client.queue.delete(id);
+  const deletequeue = (id) => queues.delete(id);
   try {
-    const data = message.client.queue.get(message.guild.id);
+    const data = queues.get(message.guild.id);
     if (!track) {
       try {
         data.channel.send(
@@ -17,7 +17,7 @@ async function play(track, message) {
         deletequeue(message.guild.id);
         var interval = config.leaveOnEndQueue * 1000;
         setTimeout(() => {
-          let queue = message.client.queue.get(message.guild.id);
+          let queue = queues.get(message.guild.id);
           if (queue) {
             return;
           } else {

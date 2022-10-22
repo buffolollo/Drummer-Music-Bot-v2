@@ -30,9 +30,9 @@ module.exports = {
   async execute(client, message, args) {
     let channel = message.member.voice.channel;
 
-    let setqueue = (id, obj) => message.client.queue.set(id, obj);
-    let deletequeue = (id) => message.client.queue.delete(id);
-    var queue = message.client.queue.get(message.guild.id);
+    let setqueue = (id, obj) => queues.set(id, obj);
+    let deletequeue = (id) => queues.delete(id);
+    var queue = queues.get(message.guild.id);
 
     if (!channel.permissionsFor(message.client.user).has("CONNECT"))
       return error(message, "I am not allowed to join the voice channel");
@@ -177,14 +177,14 @@ module.exports = {
     //VIDEOHANDLER FOR SONGS
 
     async function videoHandler(ytdata, message, vc, playlist = false) {
-      let queue = message.client.queue.get(message.guild.id);
+      let queue = queues.get(message.guild.id);
       const song = Song(ytdata, message);
       if (!queue) {
         let structure = Queue(message, channel, setqueue, song);
         try {
           if (
             !message.guild.members.me.voice.channel ||
-            !message.client.queue.get(message.guild.id)
+            !queues.get(message.guild.id)
           ) {
             return deletequeue(message.guild.id);
           }
@@ -197,7 +197,7 @@ module.exports = {
           structure.connection = connection;
           if (
             !message.guild.members.me.voice.channel ||
-            !message.client.queue.get(message.guild.id)
+            !queues.get(message.guild.id)
           ) {
             getVoiceConnection(message.guild.id).destroy();
             return deletequeue(message.guild.id);
@@ -210,9 +210,9 @@ module.exports = {
       } else {
         if (
           !message.guild.members.me.voice.channel ||
-          !message.client.queue.get(message.guild.id)
+          !queues.get(message.guild.id)
         ) {
-          message.client.queue.get(message.guild.id).connection.destroy();
+          queues.get(message.guild.id).connection.destroy();
           return deletequeue(message.guild.id);
         }
         if (playlist) addSongToQueue(ytdata, message, true);

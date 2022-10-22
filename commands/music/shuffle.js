@@ -11,9 +11,9 @@ module.exports = {
   async execute(client, message, args) {
     const channel = message.member.voice.channel;
 
-    const queue = message.client.queue.get(message.guild.id);
+    const queue = queues.get(message.guild.id);
 
-    const deletequeue = (id) => message.client.queue.delete(id);
+    const deletequeue = (id) => queues.delete(id);
 
     if (queue.songs.length < 3) {
       return error(message, "**There are too few songs!**");

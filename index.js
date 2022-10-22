@@ -20,7 +20,7 @@ const client = new Client({
     GatewayIntentBits.GuildPresences,
     GatewayIntentBits.GuildEmojisAndStickers,
     GatewayIntentBits.GuildMessageReactions,
-    GatewayIntentBits.DirectMessageReactions
+    GatewayIntentBits.DirectMessageReactions,
   ],
   partials: [
     Partials.Channel,
@@ -36,8 +36,8 @@ global.config = config;
 global.color = colors;
 global.send = send;
 global.error = error;
+global.queues = new Collection();
 
-client.queue = new Map();
 client.commands = new Collection();
 
 require("./utils/handlers/CommandsHandler")(client);

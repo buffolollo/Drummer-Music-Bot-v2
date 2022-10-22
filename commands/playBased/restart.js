@@ -25,14 +25,14 @@ module.exports = {
    * @param {String[]} args
    */
   execute(client, message, args) {
-    const setqueue = (id, obj) => message.client.queue.set(id, obj);
-    const deletequeue = (id) => message.client.queue.delete(id);
+    const setqueue = (id, obj) => queues.set(id, obj);
+    const deletequeue = (id) => queues.delete(id);
 
     return playFunc.execute(message, null, null, 0);
 
     async function _playYTDLStream(track) {
       try {
-        let data = message.client.queue.get(message.guild.id);
+        let data = queues.get(message.guild.id);
         if (!track) {
           try {
             deletequeue(message.guild.id);
@@ -42,7 +42,7 @@ module.exports = {
             );
             var interval = config.leaveOnEndQueue * 1000;
             setTimeout(() => {
-              let queue = message.client.queue.get(message.guild.id);
+              let queue = queues.get(message.guild.id);
               if (queue) return;
               if (message.guild.members.me.voice.channel) {
                 const connection = getVoiceConnection(
@@ -59,7 +59,7 @@ module.exports = {
 
         if (
           !message.guild.members.me.voice.channel ||
-          !message.client.queue.get(message.guild.id)
+          !queues.get(message.guild.id)
         ) {
           data.connection.destroy();
           return deletequeue(message.guild.id);
@@ -83,7 +83,7 @@ module.exports = {
 
         if (
           !message.guild.members.me.voice.channel ||
-          !message.client.queue.get(message.guild.id)
+          !queues.get(message.guild.id)
         ) {
           data.connection.destroy();
           return deletequeue(message.guild.id);

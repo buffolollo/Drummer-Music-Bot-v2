@@ -10,7 +10,7 @@ module.exports = {
    */
   execute(oldstate, newstate, client) {
     if (oldstate.member.id != client.user.id) return;
-    const deletequeue = (id) => oldstate.client.queue.delete(id);
+    const deletequeue = (id) => queues.delete(id);
     if (oldstate.channelId && !newstate.channel) {
       const queue = queues.get(oldstate.guild.id);
       if (queue) {

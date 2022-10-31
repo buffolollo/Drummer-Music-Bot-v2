@@ -7,7 +7,6 @@ const {
 } = require("discord.js");
 const db = require("../database/schemas/prefixSchema");
 const globalPrefix = "!";
-let prefix;
 // const BlockUser = require("../database/schemas/BlockUser");
 
 module.exports = {
@@ -18,6 +17,8 @@ module.exports = {
    * @returns
    */
   async execute(message, client) {
+    let prefix;
+    
     if (message.channel.type == ChannelType.DM) return;
 
     const data = await db.findOne({

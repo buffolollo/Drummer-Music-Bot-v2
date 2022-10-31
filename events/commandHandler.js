@@ -19,7 +19,7 @@ module.exports = {
   async execute(message, client) {
     let prefix;
 
-    if (message.channel.type == ChannelType.DM) return;
+    if (message.channel.type == ChannelType.DM || message.author.bot) return;
 
     if (message.content.startsWith(globalPrefix)) {
       prefix = globalPrefix;
@@ -38,7 +38,7 @@ module.exports = {
       }
     }
 
-    if (!prefix || message.author.bot) return;
+    if (!prefix) return;
 
     // const blockuser = await BlockUser.findOne({
     //   _id: message.author.id,

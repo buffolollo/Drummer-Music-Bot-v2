@@ -18,18 +18,18 @@ module.exports = {
    */
   async execute(message, client) {
     let prefix;
-    
-    if (message.channel.type == ChannelType.DM) return;
 
-    const data = await db.findOne({
-      _id: message.author.id,
-    });
+    if (message.channel.type == ChannelType.DM) return;
 
     if (message.content.startsWith(globalPrefix)) {
       prefix = globalPrefix;
     } else {
+      const data = await db.findOne({
+        _id: message.author.id,
+      });
       if (data) {
-        prefix = data.prefix;
+        const Pprefix = data.prefix;
+        if (message.content.startsWith(Pprefix)) prefix = Pprefix;
       } else {
         db.create({
           _id: message.author.id,

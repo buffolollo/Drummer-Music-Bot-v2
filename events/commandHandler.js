@@ -6,6 +6,8 @@ const {
   PermissionFlagsBits,
 } = require("discord.js");
 const db = require("../database/schemas/prefixSchema");
+const globalPrefix = "!";
+let prefix;
 // const BlockUser = require("../database/schemas/BlockUser");
 
 module.exports = {
@@ -22,16 +24,20 @@ module.exports = {
       _id: message.author.id,
     });
 
-    if (data) prefix = data.prefix;
-    if (!data) {
-      prefix = "!";
-      db.create({
-        _id: message.author.id,
-        prefix: "!",
-      });
+    if (message.content.startsWith(globalPrefix)) {
+      prefix = globalPrefix;
+    } else {
+      if (data) {
+        prefix = data.prefix;
+      } else {
+        db.create({
+          _id: message.author.id,
+          prefix: "!",
+        });
+      }
     }
 
-    if (!message.content.startsWith(prefix) || message.author.bot) return;
+    if (!prefix || message.author.bot) return;
 
     // const blockuser = await BlockUser.findOne({
     //   _id: message.author.id,

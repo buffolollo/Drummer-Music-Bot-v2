@@ -14,6 +14,7 @@ const addSongToQueue = require("../../utils/src/addSongToQueue");
 const Queue = require("../../utils/src/Queue");
 const Song = require("../../utils/src/Song");
 const playFunc = require("./playFunc");
+const { Search } = require("../../utils/src/Search");
 
 module.exports = {
   name: "play",
@@ -30,8 +31,6 @@ module.exports = {
   async execute(client, message, args) {
     let channel = message.member.voice.channel;
 
-    let setqueue = (id, obj) => queues.set(id, obj);
-    let deletequeue = (id) => queues.delete(id);
     var queue = queues.get(message.guild.id);
 
     if (!channel.permissionsFor(message.client.user).has("CONNECT"))
@@ -56,6 +55,8 @@ module.exports = {
     let query = args.join(" ");
     if (!query) return error(message, "**You didn't give me a song to play!**");
 
+    Search(message, query, channel);
+
     if (!message.guild.members.me.voice.channel) {
       joinVoiceChannel({
         channelId: channel.id,
@@ -72,107 +73,6 @@ module.exports = {
     });
 
     message.guild.members.me.voice.setDeaf(true).catch((err) => {});
-
-    let vc = message.member.voice.channel;
-
-    if (searcher.validate(query, "PLAYLIST_ID")) {
-      const playlist = await searcher.getPlaylist(query);
-      var a = 0;
-      var interrupt = 0;
-      message.channel.send({
-        content: `🔍🎶 **I'm adding the playlist** \`${playlist.title}. Songs: ${playlist.videos.length}\` One moment...`,
-      });
-      for (var i = 0; i < playlist.videos.length; i++) {
-        if (!message.guild.members.me.voice.channel) {
-          interrupt = 1;
-          break;
-        }
-        videoHandler(
-          await yt.getInfo(playlist.videos[i].url),
-          message,
-          vc,
-          true
-        );
-        a++;
-      }
-      if (interrupt == 0) {
-        return send(
-          message,
-          `**Youtube playlist: \`${playlist.title}\` has been added! | Songs: \`${a}\`**`
-        );
-      }
-      return;
-    }
-
-    if (searcher.validate(query, "VIDEO")) {
-      let songInfo = await yt.getInfo(query);
-      if (!songInfo)
-        return error(
-          message,
-          "**I couldn't find any songs with the provided URL**"
-        );
-      return videoHandler(songInfo, message, vc);
-    }
-
-    if (query.match(spotifySongRegex)) {
-      const data = await spotify.getPreview(query);
-      const result = await searcher.search(`${data.title} ${data.artist}`, {
-        type: "video",
-        limit: 1,
-      });
-      if (result.length < 1 || !result)
-        return error(message, "**I have not found any video!**");
-      const songInfo = await yt.getInfo(result[0].url);
-      return videoHandler(songInfo, message, vc);
-    }
-
-    if (query.match(spotifyPlaylistRegex)) {
-      const data = await spotify.getData(query);
-      message.channel.send({
-        content: `🔍🎶 **I'm adding the playlist** \`${data.name}\` It may take a while...`,
-      });
-      var ForLoop = 0;
-      var noResult = 0;
-      var interrupt = 0;
-      for (let i = 0; i < data.tracks.items.length; i++) {
-        if (!message.guild.members.me.voice.channel) {
-          interrupt = 1;
-          break;
-        }
-        const query = `${data.tracks.items[i].track.name} ${data.tracks.items[
-          i
-        ].track.artists
-          .map((a) => a.name)
-          .join(" ")}`;
-        const result = await searcher
-          .search(query, { type: "video", limit: 1 })
-          .catch((err) => {});
-        if (result.length < 1 || !result) {
-          noResult++; // could be used later for skipped tracks due to result not being found //tipo per quanti errori
-          continue;
-        }
-        videoHandler(await yt.getInfo(result[0].url), message, vc, true);
-        ForLoop++;
-      }
-
-      const playlistLength = ForLoop - noResult;
-
-      if (interrupt == 0) {
-        return send(
-          message,
-          `**Spotify playlist: \`${data.name}\` has been added! | Songs: \`${playlistLength}\`**`
-        );
-      }
-      return;
-    }
-
-    {
-      const result = await searcher.search(query, { type: "video", limit: 1 });
-      if (result.length < 1 || !result)
-        return error(message, "**I have not found any video!**");
-      const songInfo = await yt.getInfo(result[0].url);
-      return videoHandler(songInfo, message, vc);
-    }
 
     //VIDEOHANDLER FOR SONGS
 

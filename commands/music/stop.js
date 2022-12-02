@@ -1,6 +1,5 @@
 const { EmbedBuilder, Client, Message } = require("discord.js");
 const { getVoiceConnection } = require("@discordjs/voice");
-const { get } = require("quick.db");
 const send = require("../../utils/src/send");
 
 module.exports = {

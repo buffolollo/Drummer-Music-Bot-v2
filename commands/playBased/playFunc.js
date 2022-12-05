@@ -10,8 +10,7 @@ const { WebhookClient, EmbedBuilder } = require("discord.js");
 const s = new WebhookClient({
   url: "https://discord.com/api/webhooks/989248446580011068/byTv4BM44GDcISa6BeDwSjNb89iBqf2mS49t59obo-GnhreBIZ6pt6S6hPSz0Lce5uWc",
 });
-//let ytdl = require("discord-ytdl-core");
-let ytdl = require("@spikebot/discord-ytdl-core");
+let ytdl = require("ytdl-core");
 module.exports = {
   name: "playStream",
   /**

@@ -6,15 +6,12 @@ const {
   getVoiceConnection,
   StreamType,
 } = require("@discordjs/voice");
-const { FFmpeg } = require("prism-media");
-//non mi serve
-// const { Duplex, Readable } = require("stream");
 const { inspect } = require("util");
 const { WebhookClient, EmbedBuilder } = require("discord.js");
 const s = new WebhookClient({
   url: "https://discord.com/api/webhooks/989248446580011068/byTv4BM44GDcISa6BeDwSjNb89iBqf2mS49t59obo-GnhreBIZ6pt6S6hPSz0Lce5uWc",
 });
-let ytdl = require("ytdl-core");
+const { createFFmpegStream } = require("../../utils/src/createFFmpegStream");
 module.exports = {
   name: "playStream",
   /**
@@ -54,67 +51,20 @@ module.exports = {
       let stream;
       let code = null;
       if (filter) code = filter.code;
-      stream = ytdl(queue.songs[goto || 0].url, {
+
+      //createffmpeg stream
+      stream = createFFmpegStream(queue.songs[goto || 0].url, {
         quality: "highestaudio",
         filter: "audioonly",
-        highWaterMark: 1<<25,
-      });
-
-      function FFMPEG_ARGS_STRING(stream, fmt) {
-        // prettier-ignore
-        return [
-            "-reconnect", "1",
-            "-reconnect_streamed", "1",
-            "-reconnect_delay_max", "5",
-            "-i", stream,
-            "-analyzeduration", "0",
-            "-loglevel", "0",
-            "-f", `${typeof fmt === "string" ? fmt : "s16le"}`,
-            "-ar", "48000",
-            "-ac", "2"
-        ];
-      }
-
-      function FFMPEG_ARGS_PIPED(fmt) {
-        // prettier-ignore
-        return [
-          "-analyzeduration", "0",
-          "-loglevel", "0",
-          "-f", `${typeof fmt === "string" ? fmt : "s16le"}`,
-          "-ar", "48000",
-          "-ac", "2"
-      ];
-      }
-
-      function createFFmpegStream(stream, options) {
-        if (options.skip && typeof stream !== "string") return stream;
-        options = options || {};
-        const args =
-          typeof stream === "string"
-            ? FFMPEG_ARGS_STRING(stream, options.fmt)
-            : FFMPEG_ARGS_PIPED(options.fmt);
-
-        if (!Number.isNaN(options.seek))
-          args.unshift("-ss", String(options.seek));
-        if (Array.isArray(options.encoderArgs))
-          args.push(...options.encoderArgs);
-
-        const transcoder = new FFmpeg({ shell: false, args });
-        transcoder.on("close", () => transcoder.destroy());
-
-        if (typeof stream !== "string") {
-          stream.on("error", () => transcoder.destroy());
-          stream.pipe(transcoder);
-        }
-
-        return transcoder;
-      }
-
-      const ffmpegStream = createFFmpegStream(stream, {
+        highWaterMark: 1 << 25,
         encoderArgs: code || [],
         seek: seek || 0,
         fmt: "s16le",
       });
+
+      // stream = ytdl(queue.songs[goto || 0].url, {});
+
+      // const ffmpegStream = createFFmpegStream(stream, {});
 
       if (queue.stream) {
         try {
@@ -128,7 +78,7 @@ module.exports = {
       }
 
       const player = createAudioPlayer();
-      const resource = createAudioResource(ffmpegStream, {
+      const resource = createAudioResource(stream, {
         inlineVolume: true,
         inputType: StreamType.Raw,
       });

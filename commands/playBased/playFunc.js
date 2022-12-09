@@ -52,7 +52,6 @@ module.exports = {
       let code = null;
       if (filter) code = filter.code;
 
-      //createffmpeg stream
       stream = createFFmpegStream(queue.songs[goto || 0].url, {
         quality: "highestaudio",
         filter: "audioonly",
@@ -61,10 +60,6 @@ module.exports = {
         seek: seek || 0,
         fmt: "s16le",
       });
-
-      // stream = ytdl(queue.songs[goto || 0].url, {});
-
-      // const ffmpegStream = createFFmpegStream(stream, {});
 
       if (queue.stream) {
         try {

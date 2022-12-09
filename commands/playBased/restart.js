@@ -8,7 +8,6 @@ const {
   VoiceConnectionStatus,
   getVoiceConnection,
 } = require("@discordjs/voice");
-const ytdl = require("discord-ytdl-core");
 const yt = require("ytdl-core");
 const playFunc = require("./playFunc");
 

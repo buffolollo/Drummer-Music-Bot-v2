@@ -7,7 +7,6 @@ const {
   createAudioResource,
   AudioPlayer,
 } = require("@discordjs/voice");
-const ytdl = require("discord-ytdl-core");
 const yt = require("ytdl-core");
 const forHumans = require("../../utils/src/forhumans");
 const playFunc = require("./playFunc");

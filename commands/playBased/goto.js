@@ -1,5 +1,4 @@
 const { Client, Message, EmbedBuilder } = require("discord.js");
-const ytdl = require("discord-ytdl-core");
 const skip = require("../music/skip");
 const {
   AudioPlayerStatus,

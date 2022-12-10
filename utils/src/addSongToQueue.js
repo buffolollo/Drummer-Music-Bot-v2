@@ -5,6 +5,7 @@ function addSongToQueue(ytdata, message, playlist = false) {
   let queue = queues.get(message.guild.id);
   const song = Song(ytdata, message);
   queue.songs.push(song);
+  console.log(song, queue);
   if (!playlist) {
     let n = parseInt(queue.songs.length);
     return message.channel.send({
@@ -15,30 +16,30 @@ function addSongToQueue(ytdata, message, playlist = false) {
             iconURL: "https://img.icons8.com/color/2x/cd--v3.gif",
           })
           .setColor(0x006400)
-          .setThumbnail(song.thumbnail)
+          .setThumbnail(String(song.thumbnail))
           .addFields([
             {
               name: "Name",
-              value: song.name,
+              value: String(song.name),
               inline: false,
             },
             {
               name: "Visual",
-              value: song.views,
+              value: String(song.views),
               inline: false,
             },
             {
               name: "Length",
-              value: song.duration,
+              value: String(song.duration),
               inline: false,
             },
             {
               name: "Requested by",
-              value: song.requested.tag,
+              value: String(song.requested.tag),
               inline: false,
             },
           ])
-          .setFooter({ text: "Positioned " + (n - 1) + " In the queue" }),
+          .setFooter({ text: "Positioned " + String(n - 1) + " In the queue" }),
       ],
     });
   }

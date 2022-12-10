@@ -73,8 +73,8 @@ module.exports = {
         inlineVolume: true,
         inputType: StreamType.Raw,
       });
-      queue.player.play(resource);
-      queue.connection.subscribe(player);
+      queue.player.play(queue.resource);
+      queue.connection.subscribe(queue.player);
       queue.resource.volume.setVolumeLogarithmic(queue.volume / 100);
       if (filter != null) queue.filter = filter;
 

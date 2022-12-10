@@ -48,7 +48,9 @@ module.exports = {
         return;
       }
 
-      let stream = createFFmpegStream(queue.songs[goto || 0].url, {
+      const track = queue.songs[goto || 0];
+
+      let stream = createFFmpegStream(track.url, {
         quality: "highestaudio",
         filter: "audioonly",
         highWaterMark: 1 << 25,
@@ -86,9 +88,7 @@ module.exports = {
         return deletequeue(message.guild.id);
       }
 
-      const track = queue.songs[goto || 0];
-
-      player.on(AudioPlayerStatus.Idle, () => {
+      queue.player.on(AudioPlayerStatus.Idle, () => {
         queue.addTime = 0;
         if (queue.loopone) {
           return this.execute(message);
@@ -119,8 +119,7 @@ module.exports = {
 
       if (goto) {
         queue.songs[0] = queue.songs[goto];
-        let q = queue.songs;
-        q.splice(goto, 1);
+        queue.songs.splice(goto, 1);
       }
 
       queue.message.channel.send({

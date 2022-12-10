@@ -17,17 +17,10 @@ function videoHandler(ytdata, message, playlist = false) {
       song
     );
     try {
-      if (
-        !message.guild.members.me.voice.channel ||
-        !queues.get(message.guild.id)
-      ) {
-        return deletequeue(message.guild.id);
-      }
-      let channel = message.member.voice.channel;
       let connection = joinVoiceChannel({
-        channelId: channel.id,
-        guildId: channel.guild.id,
-        adapterCreator: channel.guild.voiceAdapterCreator,
+        channelId: message.member.voice.channel.id,
+        guildId: message.member.voice.channel.guild.id,
+        adapterCreator: message.member.voice.channel.guild.voiceAdapterCreator,
       });
       structure.connection = connection;
       if (

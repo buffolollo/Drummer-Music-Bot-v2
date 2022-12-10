@@ -51,7 +51,13 @@ module.exports = {
 
       const track = queue.songs[goto || 0];
 
-      let stream = createFFmpegStream(track.url, {
+      if (queue.stream) {
+        try {
+          await queue.stream.destroy();
+        } catch (error) {}
+      }
+
+      queue.stream = createFFmpegStream(track.url, {
         quality: "highestaudio",
         filter: "audioonly",
         highWaterMark: 1 << 25,
@@ -60,34 +66,14 @@ module.exports = {
         fmt: "s16le",
       });
 
-      if (queue.stream) {
-        try {
-          await queue.stream.destroy();
-        } catch (error) {}
-      }
-      queue.stream = stream;
-
-      if (seek) {
-        queue.addTime = parseInt(seek);
-      }
-
       queue.player = createAudioPlayer();
-      queue.resource = createAudioResource(stream, {
+      queue.resource = createAudioResource(queue.stream, {
         inlineVolume: true,
         inputType: StreamType.Raw,
       });
       queue.player.play(queue.resource);
       queue.connection.subscribe(queue.player);
       queue.resource.volume.setVolumeLogarithmic(queue.volume / 100);
-      if (filter != null) queue.filter = filter;
-
-      if (
-        !message.guild.members.me.voice.channel ||
-        !queues.get(message.guild.id)
-      ) {
-        queue.connection.destroy();
-        return deletequeue(message.guild.id);
-      }
 
       queue.player.on(AudioPlayerStatus.Idle, () => {
         queue.addTime = 0;
@@ -102,19 +88,18 @@ module.exports = {
         this.execute(message);
       });
 
-      if (seek)
+      if (seek) {
+        queue.addTime = parseInt(seek);
         if (!filter)
           return send(
             queue.message,
             `**I brought the song to ${seek} seconds!**`
           );
-        else
-          return send(
-            queue.message,
-            `Filter ${filter.name} set to ${filter.p}`
-          );
+      } else
+        return send(queue.message, `Filter ${filter.name} set to ${filter.p}`);
 
-      if (filter) {
+      if (filter != null) {
+        queue.filter = filter;
         return send(queue.message, `Filter ${filter.name} set to ${filter.p}`);
       }
 

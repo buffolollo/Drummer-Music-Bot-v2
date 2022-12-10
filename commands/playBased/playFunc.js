@@ -90,13 +90,11 @@ module.exports = {
 
       if (seek) {
         queue.addTime = parseInt(seek);
-        if (!filter)
-          return send(
-            queue.message,
-            `**I brought the song to ${seek} seconds!**`
-          );
-      } else
-        return send(queue.message, `Filter ${filter.name} set to ${filter.p}`);
+        return send(
+          queue.message,
+          `**I brought the song to ${seek} seconds!**`
+        );
+      }
 
       if (filter != null) {
         queue.filter = filter;

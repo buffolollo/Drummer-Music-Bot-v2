@@ -48,15 +48,11 @@ module.exports = {
         return;
       }
 
-      let stream;
-      let code = null;
-      if (filter) code = filter.code;
-
-      stream = createFFmpegStream(queue.songs[goto || 0].url, {
+      let stream = createFFmpegStream(queue.songs[goto || 0].url, {
         quality: "highestaudio",
         filter: "audioonly",
         highWaterMark: 1 << 25,
-        encoderArgs: code || [],
+        encoderArgs: filter || [],
         seek: seek || 0,
         fmt: "s16le",
       });
@@ -72,17 +68,15 @@ module.exports = {
         queue.addTime = parseInt(seek);
       }
 
-      const player = createAudioPlayer();
-      const resource = createAudioResource(stream, {
+      queue.player = createAudioPlayer();
+      queue.resource = createAudioResource(stream, {
         inlineVolume: true,
         inputType: StreamType.Raw,
       });
-      player.play(resource);
+      queue.player.play(resource);
       queue.connection.subscribe(player);
-      resource.volume.setVolumeLogarithmic(queue.volume / 100);
-      queue.player = player;
-      queue.resource = resource;
-      if (filter) queue.filter = filter;
+      queue.resource.volume.setVolumeLogarithmic(queue.volume / 100);
+      if (filter != null) queue.filter = filter;
 
       if (
         !message.guild.members.me.voice.channel ||

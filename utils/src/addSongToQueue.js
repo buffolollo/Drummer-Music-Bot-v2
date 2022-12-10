@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require("discord.js");
 const Song = require("./Song");
 
-function addSongs(ytdata, message, playlist = false) {
+function addSongToQueue(ytdata, message, playlist = false) {
   let queue = queues.get(message.guild.id);
   const song = Song(ytdata, message);
   queue.songs.push(song);
@@ -44,4 +44,4 @@ function addSongs(ytdata, message, playlist = false) {
   }
 }
 
-module.exports = addSongs;
+module.exports = addSongToQueue;

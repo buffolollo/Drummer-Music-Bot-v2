@@ -4,13 +4,18 @@ const addSongToQueue = require("./addSongToQueue");
 const Song = require("./Song");
 const Queue = require("./Queue");
 
-async function videoHandler(ytdata, message, vc, playlist = false) {
+function videoHandler(ytdata, message, playlist = false) {
   let setqueue = (id, obj) => queues.set(id, obj);
   let deletequeue = (id) => queues.delete(id);
   let queue = queues.get(message.guild.id);
   const song = Song(ytdata, message);
   if (!queue) {
-    let structure = Queue(message, vc, setqueue, song);
+    let structure = Queue(
+      message,
+      message.member.voice.channel,
+      setqueue,
+      song
+    );
     try {
       if (
         !message.guild.members.me.voice.channel ||
@@ -19,7 +24,7 @@ async function videoHandler(ytdata, message, vc, playlist = false) {
         return deletequeue(message.guild.id);
       }
       let channel = message.member.voice.channel;
-      let connection = await joinVoiceChannel({
+      let connection = joinVoiceChannel({
         channelId: channel.id,
         guildId: channel.guild.id,
         adapterCreator: channel.guild.voiceAdapterCreator,

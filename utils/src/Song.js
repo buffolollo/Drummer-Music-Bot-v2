@@ -1,9 +1,25 @@
-const { Util } = require("discord.js");
 const forHumans = require("./forhumans");
 
 function Song(ytdata, message) {
-  const n = ytdata.videoDetails.thumbnails.length;
   const song = {
+    title: ytdata.title,
+    name: ytdata.title,
+    thumbnail: ytdata.thumbnail.url,
+    requested: message.author,
+    id: ytdata.id,
+    duration: forHumans(parseInt(ytdata.duration / 1000)),
+    durationMS: ytdata.duration,
+    url: ytdata.url,
+    views: ytdata.views,
+    author: ytdata.channel.name,
+  };
+  return song;
+}
+
+module.exports = Song;
+
+/*
+const song = {
     title: ytdata.videoDetails.title,
     name: ytdata.videoDetails.title,
     thumbnail: ytdata.videoDetails.thumbnails[n - 1].url,
@@ -15,7 +31,4 @@ function Song(ytdata, message) {
     views: ytdata.videoDetails.viewCount,
     author: ytdata.videoDetails.author.name,
   };
-  return song;
-}
-
-module.exports = Song;
+*/

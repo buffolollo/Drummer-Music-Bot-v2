@@ -13,6 +13,7 @@ const s = new WebhookClient({
 });
 const { createFFmpegStream } = require("../../utils/src/createFFmpegStream");
 module.exports = {
+  id: true,
   name: "playStream",
   /**
    *

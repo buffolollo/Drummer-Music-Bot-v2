@@ -9,7 +9,7 @@ module.exports = {
   name: "test",
   aliases: [],
   d: "test command",
-  staff: true,
+  id: true,
   /**
    *
    * @param {Client} client

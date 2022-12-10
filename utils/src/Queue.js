@@ -14,7 +14,6 @@ function createQueue(message, channel, setqueue, song) {
     stream: null,
     addTime: 0,
   };
-
   setqueue(message.guild.id, structure);
   structure.songs.push(song);
   return structure;

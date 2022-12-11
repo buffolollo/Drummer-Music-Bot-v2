@@ -122,80 +122,79 @@ module.exports = {
         embeds: [ErrorEmbed],
       });
     }
-
-    //BACKUP FUNCTION PLAYYTDLSTREM
-
-    function rest() {
-      try {
-        let data = queues.get(message.guild.id);
-        if (!track) {
-          try {
-            deletequeue(message.guild.id);
-            error(
-              data.message,
-              "**The queue is empty, there are no more songs to play!**"
-            );
-            var interval = config.leaveOnEndQueue * 1000;
-            setTimeout(() => {
-              let queue = queues.get(message.guild.id);
-              if (queue) return;
-              if (message.guild.members.me.voice.channel) {
-                const connection = getVoiceConnection(
-                  message.guild.members.me.voice.channel.guild.id
-                );
-                connection.destroy();
-              }
-            }, interval);
-          } catch (error) {
-            return deletequeue(message.guild.id);
-          }
-          return;
-        }
-
-        if (
-          !message.guild.members.me.voice.channel ||
-          !queues.get(message.guild.id)
-        ) {
-          data.connection.destroy();
-          return deletequeue(message.guild.id);
-        }
-
-        data.stream = newStream;
-        const player = createAudioPlayer();
-        const resource = createAudioResource(newStream, { inlineVolume: true });
-        resource.volume.setVolumeLogarithmic(data.volume / 100);
-        data.player = player;
-        data.resource = resource;
-        player.play(resource);
-        data.connection.subscribe(player);
-
-        if (
-          !message.guild.members.me.voice.channel ||
-          !queues.get(message.guild.id)
-        ) {
-          data.connection.destroy();
-          return deletequeue(message.guild.id);
-        }
-
-        player.on(AudioPlayerStatus.Idle, () => {
-          data.addTime = 0;
-          if (data.loopone) {
-            return this.execute(client, message, data.songs[0]);
-          } else if (data.loopall) {
-            let removed = data.songs.shift();
-            data.songs.push(removed);
-          } else {
-            data.songs.shift();
-          }
-          this.execute(client, message, data.songs[0]);
-        });
-
-        data.message.channel.send({
-          content: `**Playing** 🎶 \`${track.name}\` - Now!`,
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    }
   },
 };
+
+//BACKUP FUNCTION PLAYYTDLSTREM
+// function rest() {
+//   try {
+//     let data = queues.get(message.guild.id);
+//     if (!track) {
+//       try {
+//         deletequeue(message.guild.id);
+//         error(
+//           data.message,
+//           "**The queue is empty, there are no more songs to play!**"
+//         );
+//         var interval = config.leaveOnEndQueue * 1000;
+//         setTimeout(() => {
+//           let queue = queues.get(message.guild.id);
+//           if (queue) return;
+//           if (message.guild.members.me.voice.channel) {
+//             const connection = getVoiceConnection(
+//               message.guild.members.me.voice.channel.guild.id
+//             );
+//             connection.destroy();
+//           }
+//         }, interval);
+//       } catch (error) {
+//         return deletequeue(message.guild.id);
+//       }
+//       return;
+//     }
+
+//     if (
+//       !message.guild.members.me.voice.channel ||
+//       !queues.get(message.guild.id)
+//     ) {
+//       data.connection.destroy();
+//       return deletequeue(message.guild.id);
+//     }
+
+//     data.stream = newStream;
+//     const player = createAudioPlayer();
+//     const resource = createAudioResource(newStream, { inlineVolume: true });
+//     resource.volume.setVolumeLogarithmic(data.volume / 100);
+//     data.player = player;
+//     data.resource = resource;
+//     player.play(resource);
+//     data.connection.subscribe(player);
+
+//     if (
+//       !message.guild.members.me.voice.channel ||
+//       !queues.get(message.guild.id)
+//     ) {
+//       data.connection.destroy();
+//       return deletequeue(message.guild.id);
+//     }
+
+//     player.on(AudioPlayerStatus.Idle, () => {
+//       data.addTime = 0;
+//       if (data.loopone) {
+//         return this.execute(client, message, data.songs[0]);
+//       } else if (data.loopall) {
+//         let removed = data.songs.shift();
+//         data.songs.push(removed);
+//       } else {
+//         data.songs.shift();
+//       }
+//       this.execute(client, message, data.songs[0]);
+//     });
+
+//     data.message.channel.send({
+//       content: `**Playing** 🎶 \`${track.name}\` - Now!`,
+//     });
+//   } catch (e) {
+//     console.error(e);
+//   }
+// }

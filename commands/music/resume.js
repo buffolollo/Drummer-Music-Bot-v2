@@ -8,20 +8,12 @@ module.exports = {
   queue: true,
   d: "Resume the song!",
   execute(client, message, args) {
-    const channel = message.member.voice.channel;
-
     let queue = queues.get(message.guild.id);
 
     if (queue.paused == false)
-      return send(message, ":x: This song is already playing.");
+      return error(message, ":x: This song is already playing.");
     queue.player.unpause();
     queue.paused = false;
-    return message.channel.send({
-      embeds: [
-        new EmbedBuilder()
-          .setDescription("**Song resumed :white_check_mark:**")
-          .setColor(0x006400),
-      ],
-    });
+    return send(message, "**Song resumed :white_check_mark:**");
   },
 };

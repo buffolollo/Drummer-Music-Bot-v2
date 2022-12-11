@@ -15,8 +15,6 @@ module.exports = {
    * @returns
    */
   execute(client, message, args) {
-    const channel = message.member.voice.channel;
-
     let queue = queues.get(message.guild.id);
 
     if (queue.paused == true)

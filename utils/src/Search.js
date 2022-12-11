@@ -7,7 +7,7 @@ const spotifySongRegex =
   /https?:\/\/(?:embed\.|open\.)(?:spotify\.com\/)(?:track\/|\?uri=spotify:track:)((\w|-){22})/;
 const { videoHandler } = require("./videoHandler");
 
-async function Search(message, query, vc) {
+async function Search(message, query) {
   if (searcher.validate(query, "PLAYLIST_ID")) {
     const playlist = await searcher.getPlaylist(query);
     var a = 0;

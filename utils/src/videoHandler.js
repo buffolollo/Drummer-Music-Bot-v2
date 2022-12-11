@@ -17,12 +17,11 @@ function videoHandler(ytdata, message, playlist = false) {
       song
     );
     try {
-      let connection = joinVoiceChannel({
+      structure.connection = joinVoiceChannel({
         channelId: message.member.voice.channel.id,
         guildId: message.member.voice.channel.guild.id,
         adapterCreator: message.member.voice.channel.guild.voiceAdapterCreator,
       });
-      structure.connection = connection;
       if (
         !message.guild.members.me.voice.channel ||
         !queues.get(message.guild.id)

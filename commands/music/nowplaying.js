@@ -5,18 +5,6 @@ async function getTime(query) {
   var timeString = date.toISOString().substr(11, 8);
   return timeString;
 }
-function getPBar(totSec, query) {
-  let thick = Math.floor(query / 5);
-  let thin = Math.ceil((totSec - query) / 10) * 2;
-  let str = "_[_";
-
-  for (let i = 0; i < thick; i++) str += "▰";
-  for (let i = 0; i < thin; i++) str += "▱";
-
-  str += "_]_";
-
-  return str;
-}
 
 module.exports = {
   name: "nowplaying",
@@ -31,7 +19,7 @@ module.exports = {
    * @param {String[]} args
    * @returns
    */
-  async execute(client, message, args, q) {
+  execute(client, message, args, q) {
     const queue = q.get(message.guild.id);
 
     let currentStreamTime = parseInt(
@@ -42,8 +30,8 @@ module.exports = {
     let time = currentStreamTime + addtime;
     const song = queue.songs[0];
     let thumbnail = queue.songs[0].thumbnail;
-    let timeLine = await getTime(parseInt(song.durationMS / 1000));
-    let streamTime = await getTime(parseInt(time));
+    let timeLine = getTime(parseInt(song.durationMS / 1000));
+    let streamTime = getTime(parseInt(time));
     message.channel.send({
       embeds: [
         new EmbedBuilder()
@@ -75,10 +63,6 @@ module.exports = {
               value: `(${streamTime} | ${time})  / (${timeLine} | ${
                 song.durationMS / 1000
               } seconds)`,
-            },
-            {
-              name: "Progress Bar",
-              value: getPBar(song.durationMS / 1000, time),
             },
           ]),
         //.setDescription(`[${name}](${song.url})`)

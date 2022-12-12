@@ -22,11 +22,9 @@ module.exports = {
   async execute(client, message, args, q) {
     const queue = q.get(message.guild.id);
 
-    let currentStreamTime = parseInt(
-      queue.player.state.playbackDuration / 1000
-    );
-
-    let time = currentStreamTime + parseInt(queue.addTime);
+    let time =
+      parseInt(queue.player.state.playbackDuration / 1000) +
+      parseInt(queue.addTime);
     const song = queue.songs[0];
     let timeLine = await getTime(parseInt(song.durationMS / 1000));
     let streamTime = await getTime(parseInt(time));

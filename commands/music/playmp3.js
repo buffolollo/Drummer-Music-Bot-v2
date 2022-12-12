@@ -43,12 +43,17 @@ module.exports = {
       resource = createAudioResource("./music/all.flac", {
         inlineVolume: true,
       });
+    } else if (query == 4) {
+      resource = createAudioResource("./music/cac.flac", {
+        inlineVolume: true,
+      });
     } else {
       resource = createAudioResource(query, { inlineVolume: true });
     }
-    resource.volume.setVolumeLogarithmic(100 / 100);
+
     player.play(resource);
     connection.subscribe(player);
+    resource.volume.setVolumeLogarithmic(100 / 100);
 
     send(message, `I'm playing the sound!`);
 

@@ -19,19 +19,17 @@ module.exports = {
    * @param {String[]} args
    * @returns
    */
-  execute(client, message, args, q) {
+  async execute(client, message, args, q) {
     const queue = q.get(message.guild.id);
 
     let currentStreamTime = parseInt(
       queue.player.state.playbackDuration / 1000
     );
 
-    let addtime = parseInt(queue.addTime);
-    let time = currentStreamTime + addtime;
+    let time = currentStreamTime + parseInt(queue.addTime);
     const song = queue.songs[0];
-    let thumbnail = queue.songs[0].thumbnail;
-    let timeLine = getTime(parseInt(song.durationMS / 1000));
-    let streamTime = getTime(parseInt(time));
+    let timeLine = await getTime(parseInt(song.durationMS / 1000));
+    let streamTime = await getTime(parseInt(time));
     message.channel.send({
       embeds: [
         new EmbedBuilder()
@@ -39,7 +37,7 @@ module.exports = {
             name: "Now playing",
             iconURL: "https://img.icons8.com/color/2x/rhombus-loader.gif",
           })
-          .setThumbnail(thumbnail)
+          .setThumbnail(queue.songs[0].thumbnail)
           .setColor(0x006400)
           .addFields([
             {

@@ -1,5 +1,5 @@
 const { EmbedBuilder, Client, Message } = require("discord.js");
-const playFunc = require("../playBased/playFunc");
+const playFunc = require("./playFunc");
 
 const filters = {
   bassboost: "bass=g=20",
@@ -67,7 +67,7 @@ module.exports = {
             code: ["-af", `bass=g=${num}`],
             p: num,
           };
-          playFunc.execute(message, data, time, null);
+          playFunc.execute(message, data);
         }
         break;
       case "8D":
@@ -77,7 +77,7 @@ module.exports = {
             code: ["-af", `apulsator=hz=0.09`],
             p: "default",
           };
-          playFunc.execute(message, data, time, null);
+          playFunc.execute(message, data);
         }
         break;
       default:

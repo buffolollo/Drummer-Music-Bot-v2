@@ -47,7 +47,7 @@ module.exports = {
     time = parseInt(time);
 
     try {
-      playFunc.execute(message, null, time);
+      playFunc.execute(message, null, time, null);
     } catch (error) {
       deletequeue(message.guild.id);
       console.error(error);

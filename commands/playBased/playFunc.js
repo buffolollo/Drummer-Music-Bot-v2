@@ -20,7 +20,7 @@ module.exports = {
    * @param {Message} message
    * @returns
    */
-  async execute(message, filter, seek, goto) {
+  async execute(message, filter = null, seek = null, goto = null) {
     try {
       const queue = queues.get(message.guild.id);
       let deletequeue = (id) => queues.delete(id);
@@ -57,12 +57,21 @@ module.exports = {
         } catch (error) {}
       }
 
+      let currentStreamTime = null;
+      if (queue.player) {
+        currentStreamTime = queue.player.state.playbackDuration;
+      }
+      let time =
+        (currentStreamTime ? currentStreamTime / 1000 : null) + queue.addTime;
+      console.log(queue.addTime);
+      console.log(time);
+
       queue.stream = createFFmpegStream(track.url, {
         quality: "highestaudio",
         filter: "audioonly",
         highWaterMark: 1 << 25,
-        encoderArgs: filter || [],
-        seek: seek || 0,
+        encoderArgs: (filter ? filter.code : []),//filter.code || [],
+        seek: seek || time || 0,
         fmt: "s16le",
       });
 
@@ -76,7 +85,7 @@ module.exports = {
       queue.resource.volume.setVolumeLogarithmic(queue.volume / 100);
 
       queue.player.on(AudioPlayerStatus.Idle, () => {
-        queue.addTime = 0;
+        queue.addTime = null;
         if (queue.loopone) {
           return this.execute(message);
         } else if (queue.loopall) {
@@ -96,7 +105,7 @@ module.exports = {
         );
       }
 
-      if (filter != null) {
+      if (filter) {
         queue.filter = filter;
         return send(queue.message, `Filter ${filter.name} set to ${filter.p}`);
       }

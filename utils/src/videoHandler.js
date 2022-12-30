@@ -4,11 +4,11 @@ const addSongToQueue = require("./addSongToQueue");
 const Song = require("./Song");
 const Queue = require("./Queue");
 
-function videoHandler(ytdata, message, playlist = false) {
+async function videoHandler(ytdata, message, playlist = false) {
   let setqueue = (id, obj) => queues.set(id, obj);
   let deletequeue = (id) => queues.delete(id);
   let queue = queues.get(message.guild.id);
-  const song = Song(ytdata, message);
+  const song = await Song(ytdata, message);
   if (!queue) {
     let structure = Queue(
       message,

@@ -12,7 +12,7 @@ function createQueue(message, channel, setqueue, song) {
     loopall: false,
     songs: [],
     stream: null,
-    addTime: 0,
+    addTime: null,
   };
   setqueue(message.guild.id, structure);
   structure.songs.push(song);

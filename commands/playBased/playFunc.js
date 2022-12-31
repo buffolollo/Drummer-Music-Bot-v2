@@ -57,20 +57,16 @@ module.exports = {
         } catch (error) {}
       }
 
-      let currentStreamTime = null;
-      if (queue.player) {
-        currentStreamTime = queue.player.state.playbackDuration;
-      }
-      let time =
-        (currentStreamTime ? currentStreamTime / 1000 : null) + queue.addTime;
-      console.log(queue.addTime);
-      console.log(time);
+      let currentStreamTime = 0;
+      if (queue.player)
+        currentStreamTime = queue.player.state.playbackDuration / 1000;
+      let time = currentStreamTime + queue.addTime - 3;
 
       queue.stream = createFFmpegStream(track.url, {
         quality: "highestaudio",
         filter: "audioonly",
         highWaterMark: 1 << 25,
-        encoderArgs: (filter ? filter.code : []),//filter.code || [],
+        encoderArgs: filter ? filter.code : [], //filter.code || [],
         seek: seek || time || 0,
         fmt: "s16le",
       });
@@ -85,7 +81,7 @@ module.exports = {
       queue.resource.volume.setVolumeLogarithmic(queue.volume / 100);
 
       queue.player.on(AudioPlayerStatus.Idle, () => {
-        queue.addTime = null;
+        queue.addTime = 0;
         if (queue.loopone) {
           return this.execute(message);
         } else if (queue.loopall) {

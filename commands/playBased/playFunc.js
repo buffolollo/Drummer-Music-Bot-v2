@@ -60,14 +60,13 @@ module.exports = {
       let currentStreamTime = 0;
       if (queue.player)
         currentStreamTime = queue.player.state.playbackDuration / 1000;
-      let time = currentStreamTime + queue.addTime - 3;
 
       queue.stream = createFFmpegStream(track.url, {
         quality: "highestaudio",
         filter: "audioonly",
         highWaterMark: 1 << 25,
         encoderArgs: filter ? filter.code : [], //filter.code || [],
-        seek: seek || time || 0,
+        seek: seek || currentStreamTime + queue.addTime - 3 || 0,
         fmt: "s16le",
       });
 

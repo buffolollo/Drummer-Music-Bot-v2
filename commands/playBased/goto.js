@@ -9,7 +9,7 @@ const {
   VoiceConnectionStatus,
   getVoiceConnection,
 } = require("@discordjs/voice");
-const playFunc = require("./playFunc");
+const playFunc = require("../../functions/playFunc");
 
 module.exports = {
   name: "goto",

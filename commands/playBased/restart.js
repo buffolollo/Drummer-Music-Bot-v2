@@ -9,7 +9,7 @@ const {
   getVoiceConnection,
 } = require("@discordjs/voice");
 const yt = require("ytdl-core");
-const playFunc = require("./playFunc");
+const playFunc = require("../../functions/playFunc");
 
 module.exports = {
   name: "replay",

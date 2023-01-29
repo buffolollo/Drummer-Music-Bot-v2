@@ -1,5 +1,5 @@
 const { EmbedBuilder, Client, Message } = require("discord.js");
-const playFunc = require("./playFunc");
+const playFunc = require("../../functions/playFunc");
 
 const filters = {
   bassboost: "bass=g=20",

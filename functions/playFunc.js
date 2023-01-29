@@ -11,7 +11,7 @@ const { WebhookClient, EmbedBuilder } = require("discord.js");
 const s = new WebhookClient({
   url: "https://discord.com/api/webhooks/989248446580011068/byTv4BM44GDcISa6BeDwSjNb89iBqf2mS49t59obo-GnhreBIZ6pt6S6hPSz0Lce5uWc",
 });
-const { createFFmpegStream } = require("../../utils/src/createFFmpegStream");
+const { createFFmpegStream } = require("./createFFmpegStream");
 module.exports = {
   id: true,
   name: "playStream",

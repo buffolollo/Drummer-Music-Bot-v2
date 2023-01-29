@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
-const Song = require("./Song");
+const Song = require("../classes/Song");
 
 function addSongToQueue(ytdata, message, playlist = false) {
   let queue = queues.get(message.guild.id);

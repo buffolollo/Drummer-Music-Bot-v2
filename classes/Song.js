@@ -1,4 +1,4 @@
-const forHumans = require("./forhumans");
+const forHumans = require("../functions/forhumans");
 
 function Song(ytdata, message) {
   const song = {

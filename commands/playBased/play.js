@@ -2,7 +2,7 @@ const { Client, Message } = require("discord.js");
 const { joinVoiceChannel } = require("@discordjs/voice");
 const resume = require("../music/resume");
 const pause = require("../music/pause");
-const { Search } = require("../../utils/src/Search");
+const { Search } = require("../../functions/Search");
 
 module.exports = {
   name: "play",

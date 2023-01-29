@@ -1,15 +1,5 @@
-const { EmbedBuilder, Client, Message, Util } = require("discord.js");
-const {
-  createAudioPlayer,
-  VoiceConnectionStatus,
-  joinVoiceChannel,
-  AudioPlayerStatus,
-  createAudioResource,
-  AudioPlayer,
-} = require("@discordjs/voice");
-const yt = require("ytdl-core");
-const forHumans = require("../../utils/src/forhumans");
-const playFunc = require("./playFunc");
+const { Client, Message } = require("discord.js");
+const playFunc = require("../../functions/playFunc");
 module.exports = {
   name: "seek",
   aliases: ["sk"],
@@ -24,30 +14,24 @@ module.exports = {
    * @returns
    */
   execute(client, message, args) {
-    const queue = queues.get(message.guild.id);
+    var queue = queues.get(message.guild.id);
 
     const deletequeue = (id) => queues.delete(id);
-    var time;
-
-    time = args[0];
+    var time = args[0];
     if (isNaN(time)) return error(message, "Please enter a valid number!");
 
-    if (queue.paused == true)
+    if (queue.paused)
       return error(
         message,
         "To keep the song going, you have to pick it up again"
       );
 
-    let queue2 = queues.get(message.guild.id);
-    let or = time * 1000;
-    if (queue2.songs[0].durationMS <= or) {
+    if (queue.songs[0].durationMS <= time * 1000) {
       return queue.player.stop();
     }
 
-    time = parseInt(time);
-
     try {
-      playFunc.execute(message, null, time, null);
+      playFunc.execute(message, null, parseInt(time), null);
     } catch (error) {
       deletequeue(message.guild.id);
       console.error(error);

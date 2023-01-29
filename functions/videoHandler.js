@@ -1,8 +1,8 @@
 const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
-const playFunc = require("../../commands/playBased/playFunc");
+const playFunc = require("./playFunc");
 const addSongToQueue = require("./addSongToQueue");
-const Song = require("./Song");
-const Queue = require("./Queue");
+const Song = require("../classes/Song");
+const Queue = require("../classes/Queue");
 
 async function videoHandler(ytdata, message, playlist = false) {
   let setqueue = (id, obj) => queues.set(id, obj);
